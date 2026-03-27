@@ -1,0 +1,163 @@
+@use '../utils' as *;
+
+.hero {
+  &__scroll-track {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  &__sticky-wrap {
+    width: 100%;
+    position: relative;
+  }
+
+  &__mask {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  &__container {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: 100%;
+    padding-left: #{fluid(16px, 60px)};
+    padding-right: #{fluid(16px, 60px)};
+  }
+
+  &__content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh;
+    padding-bottom: rem-calc(109px);
+    position: relative;
+    transition: all 0.3s ease-in-out;
+  }
+
+  &__moving-title {
+    margin-left: #{vw-calc(-14px)};
+    position: relative;
+    overflow: visible;
+    flex-shrink: 0;
+    width: max-content;
+    min-width: max-content;
+
+    h1 {
+      font-size: #{vw-calc(300px)};
+      font-weight: 500;
+      line-height: 1;
+    }
+  }
+
+  &__title-base {
+    grid-column-gap: #{vw-calc(60px)};
+    grid-row-gap: #{vw-calc(60px)};
+    color: gray;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    width: max-content;
+    min-width: max-content;
+    white-space: nowrap;
+    overflow: visible;
+    padding-right: 30vw;
+
+    > * {
+      opacity: 0;
+      transform: translateY(vw-calc(200px));
+    }
+  }
+
+  &__title-shade {
+    grid-column-gap: #{vw-calc(60px)};
+    grid-row-gap: #{vw-calc(60px)};
+    color: #111;
+    justify-content: flex-start;
+    align-items: center;
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: max-content;
+    min-width: max-content;
+    white-space: nowrap;
+    overflow: visible;
+    padding-right: 30vw;
+    clip-path: inset(0% 100% 0% 0%); // <-- Prevent flash of black text before JS runs
+  }
+
+  &__big-text {
+    color: #111;
+  }
+
+  &__accent-wrap {
+    display: flex;
+    flex-flow: column;
+    width: #{vw-calc(540px)};
+    height: #{vw-calc(176px)};
+
+    &.shade {
+      opacity: 0;
+    }
+  }
+
+  &__accent-shape {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: #{vw-calc(20px)};
+    border-radius: #{vw-calc(88px)};
+    background-color: gray;
+  }
+
+  &-accent {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: #{vw-calc(134px)};
+    height: #{vw-calc(134px)};
+    position: relative;
+    transform: none;
+
+    .accent-part {
+      position: absolute;
+      width: 100%;
+      height: #{vw-calc(14px)};
+      background-color: white;
+
+      // 각도 데이터 매핑
+      $rotations: (
+        2: 90deg,
+        3: 45deg,
+        4: -45deg,
+      );
+
+      @each $num, $deg in $rotations {
+        &.bar-#{$num} {
+          transform: rotate($deg);
+        }
+      }
+    }
+  }
+
+  &__desc-wrap {
+    width: fit-content;
+    position: absolute;
+    inset: auto 0 vw-calc(55px) auto;
+
+    @include mq(tablet-ls) {
+      width: 100%;
+      text-align: center;
+    }
+
+    p {
+      font-size: #{fluid(14px, 24px)};
+      font-weight: 400;
+      line-height: 1.5;
+    }
+  }
+}

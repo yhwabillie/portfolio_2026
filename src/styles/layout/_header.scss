@@ -1,0 +1,95 @@
+@use '../utils' as *;
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: rem-calc(30px) 0 rem-calc(30px);
+  border-bottom: rem-calc(1px) solid var(--color-border, #eee);
+  transition: all 0.3s ease-in-out;
+  background-color: transparent;
+
+  &.is-scrolled {
+    padding: rem-calc(15px) 0;
+    background-color: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border-color: rgba(0, 0, 0, 0.1);
+  }
+
+  @include mq(tablet-ls) {
+    padding: rem-calc(20px) 0 rem-calc(20px);
+
+    &.is-scrolled {
+      padding: rem-calc(10px) 0;
+    }
+  }
+
+  .container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    justify-content: space-between;
+    align-items: center;
+    gap: rem-calc(18px);
+    margin: 0 auto;
+  }
+
+  &__nav {
+    &-group {
+      [data-mobile-menu-open] {
+        display: none;
+      }
+    }
+
+    &-list {
+      display: flex;
+
+      @include mq(tablet-ls) {
+        display: none;
+      }
+    }
+  }
+
+  &__logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    @include mq(tablet-ls) {
+      position: initial;
+      transform: initial;
+    }
+
+    &-group {
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: rem-calc(10px);
+
+      @include mq(tablet-ls) {
+        gap: rem-calc(6px);
+      }
+    }
+
+    &-link {
+      width: rem-calc(180px);
+      cursor: pointer;
+      display: inline-flex;
+
+      @include mq(tablet-ls) {
+        width: rem-calc(120px);
+      }
+    }
+
+    &-sub {
+      font-size: rem-calc(14px);
+
+      @include mq(tablet-ls) {
+        font-size: rem-calc(12px);
+      }
+    }
+  }
+}

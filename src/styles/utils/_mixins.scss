@@ -1,0 +1,130 @@
+@use "sass:map";
+@use "sass:list";
+@use "variables" as *;
+@use "functions" as *;
+
+// 기본 미디어 쿼리 믹스인 (데스크탑 퍼스트)
+@mixin mq($breakpoint-name) {
+  $size: map.get($breakpoints, $breakpoint-name);
+
+  @if $size {
+    @media (max-width: $size) {
+      @content;
+    }
+  } @else {
+    @error "존재하지 않는 브레이크포인트 이름입니다: '#{$breakpoint-name}'";
+  }
+}
+
+// 1. 컨테이너 기본 레이아웃 (너비, 중앙정렬, 패딩)
+// 데스크탑 퍼스트 방식이므로 큰 해상도부터 작은 순서대로 패딩이 덮어씌워지게 구성했습니다.
+@mixin container-layout {
+  margin: 0 auto;
+  width: 100%;
+
+  // 기본값 (데스크탑: pc-l)
+  max-width: rem-calc(map.get($container-max-widths, "pc-l"));
+  padding: 0 rem-calc(map.get($gutters, "pc-l"));
+
+  // 브레이크포인트별 자동 레이아웃 대응
+  @include mq(pc-s) {
+    max-width: rem-calc(map.get($container-max-widths, "pc-s"));
+    padding: 0 rem-calc(map.get($gutters, "pc-s"));
+  }
+  @include mq(pc-xs) {
+    max-width: rem-calc(map.get($container-max-widths, "pc-xs"));
+    padding: 0 rem-calc(map.get($gutters, "pc-xs"));
+  }
+  @include mq(laptop-l) {
+    max-width: rem-calc(map.get($container-max-widths, "laptop-l"));
+    padding: 0 rem-calc(map.get($gutters, "laptop-l"));
+  }
+  @include mq(tablet-lp) {
+    max-width: rem-calc(map.get($container-max-widths, "tablet-lp"));
+    padding: 0 rem-calc(map.get($gutters, "tablet-lp"));
+  }
+  @include mq(tablet-ls) {
+    max-width: rem-calc(map.get($container-max-widths, "tablet-ls"));
+    padding: 0 rem-calc(map.get($gutters, "tablet-ls"));
+  }
+  @include mq(tablet-l) {
+    max-width: rem-calc(map.get($container-max-widths, "tablet-l"));
+    padding: 0 rem-calc(map.get($gutters, "tablet-l"));
+  }
+  @include mq(tablet-s) {
+    max-width: rem-calc(map.get($container-max-widths, "tablet-s"));
+    padding: 0 rem-calc(map.get($gutters, "tablet-s"));
+  }
+  @include mq(mobile-l) {
+    max-width: 100%;
+    padding: 0 rem-calc(map.get($gutters, "mobile-l"));
+  }
+  @include mq(mobile-s) {
+    max-width: 100%;
+    padding: 0 rem-calc(map.get($gutters, "mobile-s"));
+  }
+  @include mq(mobile-xs) {
+    max-width: 100%;
+    padding: 0 rem-calc(map.get($gutters, "mobile-xs"));
+  }
+  @include mq(fold) {
+    max-width: 100%;
+    padding: 0 rem-calc(map.get($gutters, "fold"));
+  }
+}
+
+// 2. 컨테이너 그리드 시스템 (디스플레이, 컬럼, 갭)
+// 패딩 설정은 제거하고 오직 그리드 속성만 정의했습니다.
+@mixin container-grid {
+  display: grid;
+
+  // 기본값 (데스크탑: pc-l)
+  grid-template-columns: repeat(map.get($columns, "pc-l"), 1fr);
+  gap: rem-calc(map.get($gaps, "pc-l"));
+
+  // 브레이크포인트별 자동 그리드 대응
+  @include mq(pc-s) {
+    grid-template-columns: repeat(map.get($columns, "pc-s"), 1fr);
+    gap: rem-calc(map.get($gaps, "pc-s"));
+  }
+  @include mq(pc-xs) {
+    grid-template-columns: repeat(map.get($columns, "pc-xs"), 1fr);
+    gap: rem-calc(map.get($gaps, "pc-xs"));
+  }
+  @include mq(laptop-l) {
+    grid-template-columns: repeat(map.get($columns, "laptop-l"), 1fr);
+    gap: rem-calc(map.get($gaps, "laptop-l"));
+  }
+  @include mq(tablet-lp) {
+    grid-template-columns: repeat(map.get($columns, "tablet-lp"), 1fr);
+    gap: rem-calc(map.get($gaps, "tablet-lp"));
+  }
+  @include mq(tablet-ls) {
+    grid-template-columns: repeat(map.get($columns, "tablet-ls"), 1fr);
+    gap: rem-calc(map.get($gaps, "tablet-ls"));
+  }
+  @include mq(tablet-l) {
+    grid-template-columns: repeat(map.get($columns, "tablet-l"), 1fr);
+    gap: rem-calc(map.get($gaps, "tablet-l"));
+  }
+  @include mq(tablet-s) {
+    grid-template-columns: repeat(map.get($columns, "tablet-s"), 1fr);
+    gap: rem-calc(map.get($gaps, "tablet-s"));
+  }
+  @include mq(mobile-l) {
+    grid-template-columns: repeat(map.get($columns, "mobile-l"), 1fr);
+    gap: rem-calc(map.get($gaps, "mobile-l"));
+  }
+  @include mq(mobile-s) {
+    grid-template-columns: repeat(map.get($columns, "mobile-s"), 1fr);
+    gap: rem-calc(map.get($gaps, "mobile-s"));
+  }
+  @include mq(mobile-xs) {
+    grid-template-columns: repeat(map.get($columns, "mobile-xs"), 1fr);
+    gap: rem-calc(map.get($gaps, "mobile-xs"));
+  }
+  @include mq(fold) {
+    grid-template-columns: repeat(map.get($columns, "fold"), 1fr);
+    gap: rem-calc(map.get($gaps, "fold"));
+  }
+}

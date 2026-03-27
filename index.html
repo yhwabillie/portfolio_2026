@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/src/styles/main.scss" />
+    <!-- library scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollToPlugin.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/TextPlugin.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Observer.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/EasePack.min.js" defer></script>
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" defer></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
+    <script type="module" src="/src/main.js"></script>
+    <title>포트폴리오 2026</title>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="header">
+        <div class="container" data-header-container>
+          <div class="header__nav-group">
+            <button data-mobile-menu-open data-tooltip="사이드 메뉴" data-tooltip-pos="bottom" class="btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="btn__icon lucide lucide-menu-icon lucide-menu">
+                <path d="M4 5h16" />
+                <path d="M4 12h16" />
+                <path d="M4 19h16" />
+              </svg>
+            </button>
+            <nav class="header__nav" aria-label="데스크탑 네비게이션">
+              <ul class="header__nav-list">
+                <li class="header__nav-list-item">
+                  <a href="#" class="btn"><span class="btn__label">About</span></a>
+                </li>
+                <li class="header__nav-list-item">
+                  <a href="#" class="btn"><span class="btn__label">Career</span></a>
+                </li>
+                <li class="header__nav-list-item">
+                  <a href="#" class="btn"><span class="btn__label">Works</span></a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <h1 class="header__logo">
+            <div class="header__logo-group">
+              <a href="#" class="header__logo-link">
+                <img src="/src/assets/images/logo.svg" alt="logo" />
+              </a>
+              <span class="header__logo-sub">UI developer</span>
+            </div>
+          </h1>
+          <div class="header__utils">
+            <button
+              data-theme-change
+              class="header__utils-btn icon-btn"
+              data-tooltip="테마 전환"
+              data-tooltip-pos="bottom">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="btn__icon lucide lucide-moon-icon lucide-moon">
+                <path
+                  d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </header>
+      <aside data-mobile-menu-base class="side-menu">
+        <div data-mobile-menu-overlay class="side-menu__overlay" aria-hidden="true"></div>
+        <nav class="side-menu__nav" aria-label="모바일 네비게이션">
+          <div class="side-menu__nav-top">
+            <button data-mobile-menu-close class="icon-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon-btn__icon lucide lucide-x-icon lucide-x">
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+              </svg>
+              <!-- <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="icon-btn__icon lucide lucide-sun-icon lucide-sun">
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2" />
+                <path d="M12 20v2" />
+                <path d="m4.93 4.93 1.41 1.41" />
+                <path d="m17.66 17.66 1.41 1.41" />
+                <path d="M2 12h2" />
+                <path d="M20 12h2" />
+                <path d="m6.34 17.66-1.41 1.41" />
+                <path d="m19.07 4.93-1.41 1.41" />
+              </svg> -->
+            </button>
+          </div>
+          <ul data-mobile-menu-nav-list class="side-menu__nav-list">
+            <li data-mobile-menu-nav-item class="side-menu__nav-list-item">
+              <a href="#">About</a>
+            </li>
+            <li data-mobile-menu-nav-item class="side-menu__nav-list-item">
+              <a href="#">Career</a>
+            </li>
+            <li data-mobile-menu-nav-item class="side-menu__nav-list-item">
+              <a href="#">Works</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+      <main class="main">
+        <div id="hero" class="hero__scroll-track">
+          <div class="hero__sticky-wrap">
+            <section class="hero__mask">
+              <div class="hero__container">
+                <div class="hero__content">
+                  <!-- moving title -->
+                  <div class="hero__moving-title">
+                    <!-- base -->
+                    <div class="hero__title-base">
+                      <h1 class="hero__big-text">UI/UX</h1>
+                      <div class="hero__accent-wrap">
+                        <div class="hero__accent-shape">
+                          <div class="hero__accent-rotate">
+                            <div class="hero-accent">
+                              <div class="accent-part bar-1"></div>
+                              <div class="accent-part bar-2"></div>
+                              <div class="accent-part bar-3"></div>
+                              <div class="accent-part bar-4"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <h1>that</h1>
+                      <h1>matter</h1>
+                    </div>
+                    <!-- shade -->
+                    <div class="hero__title-shade">
+                      <h1>UI/UX</h1>
+                      <div class="hero__accent-wrap shade">
+                        <div class="hero__accent-shape">
+                          <div class="hero__accent-rotate">
+                            <div class="hero-accent">
+                              <div class="accent-part bar-1"></div>
+                              <div class="accent-part bar-2"></div>
+                              <div class="accent-part bar-3"></div>
+                              <div class="accent-part bar-4"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <h1>that</h1>
+                      <h1>matter</h1>
+                    </div>
+                  </div>
+                  <!-- desc -->
+                  <div class="hero__desc-wrap">
+                    <p>
+                      웹 접근성과 웹 표준을 준수하는 퍼블리셔,
+                      <br />
+                      UI 컴포넌트 시스템을 구축해온 이윤화입니다.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+        <section id="about" class="about">
+          <div class="container">
+            <h2>section 02 : About</h2>
+            <p>section description</p>
+          </div>
+        </section>
+        <section id="career" class="career">
+          <div class="container">
+            <h2>section 03 : Career</h2>
+            <p>section description</p>
+          </div>
+        </section>
+        <section id="works" class="works">
+          <div class="container">
+            <h2>section 04 : Works</h2>
+            <p>section description</p>
+          </div>
+        </section>
+      </main>
+      <footer id="footer" class="footer">
+        <div class="container">footer</div>
+      </footer>
+    </div>
+  </body>
+</html>

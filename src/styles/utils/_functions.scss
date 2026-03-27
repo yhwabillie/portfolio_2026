@@ -1,0 +1,61 @@
+@use 'sass:math';
+@use 'sass:meta';
+@use 'sass:string';
+
+// 1. 기준 폰트 사이즈 (16px = 1rem 세팅)
+$base-font-size: 16px;
+
+// 2. 단위 제거 유틸리티 함수
+@function strip-unit($number) {
+  @if meta.type-of($number) == 'number' and not math.is-unitless($number) {
+    @return math.div($number, ($number * 0 + 1));
+  }
+  @return $number;
+}
+
+// 3. rem 변환 핵심 함수
+@function rem-calc($pxValue) {
+  $pxCount: strip-unit($pxValue);
+  $baseCount: strip-unit($base-font-size);
+  @return math.div($pxCount, $baseCount) * 1rem;
+}
+
+// 4. vw 변환 핵심 함수
+// 디자인 가이드 기준 너비(기본 1920)를 바탕으로 px 값을 vw 단위로 변환합니다.
+@function vw-calc($pxValue, $base-vw: 1920) {
+  $pxCount: strip-unit($pxValue);
+  $vwCount: strip-unit($base-vw);
+  @return math.div($pxCount, $vwCount) * 100vw;
+}
+
+// 5. 가변 타이포그래피 (Fluid Token) 핵심 함수
+// 화면 너비 구간(min-vw ~ max-vw) 사이에서 자연스럽게 크기가 조절되는 clamp() 토큰 함수입니다.
+// 기본값: 최소 모바일 해상도(280) ~ 최대 데스크탑 해상도(1920) 사이를 반응형으로 변환
+@function fluid($min-px, $max-px, $min-vw: 280, $max-vw: 1920) {
+  $min: strip-unit($min-px);
+  $max: strip-unit($max-px);
+  $vw-min: strip-unit($min-vw);
+  $vw-max: strip-unit($max-vw);
+
+  @if $min == $max {
+    @return rem-calc($min);
+  }
+
+  // 선형 보간 방정식 풀이 (slope 및 y절편)
+  $slope: math.div($max - $min, $vw-max - $vw-min);
+  $y-axis-intersection: $min - ($vw-min * $slope);
+
+  // clamp의 중간(가변형) 구문을 선언: 'rem-calc(y절편) + (기울기 * 100)vw'
+  // CSS에 주입하기 위해 문자를 제거하고 조합
+  $preferred-value: string.unquote('#{rem-calc($y-axis-intersection)} + #{$slope * 100}vw');
+
+  $rem-min: rem-calc($min);
+  $rem-max: rem-calc($max);
+
+  // 만약 시작값이 끝값보다 더 크다면(화면이 커질수록 폰트가 작아지는 경우) clamp의 min, max 위치를 반전
+  @if $min > $max {
+    @return clamp(#{$rem-max}, #{$preferred-value}, #{$rem-min});
+  }
+
+  @return clamp(#{$rem-min}, #{$preferred-value}, #{$rem-max});
+}

@@ -1,0 +1,74 @@
+$breakpoints: (
+  fold: 280px,
+  mobile-xs: 320px,
+  mobile-s: 375px,
+  mobile-l: 480px,
+  tablet-s: 768px,
+  tablet-l: 834px,
+  tablet-ls: 1024px,
+  tablet-lp: 1194px,
+  laptop-l: 1280px,
+  pc-xs: 1366px,
+  pc-s: 1440px,
+  pc-l: 1920px,
+);
+
+$gutters: (
+  fold: 16px,
+  mobile-xs: 16px,
+  mobile-s: 16px,
+  mobile-l: 20px,
+  tablet-s: 24px,
+  tablet-l: 24px,
+  tablet-ls: 32px,
+  tablet-lp: 32px,
+  laptop-l: 40px,
+  pc-xs: 40px,
+  pc-s: 48px,
+  pc-l: 48px,
+);
+
+$container-max-widths: (
+  fold: 100%,
+  mobile-xs: 100%,
+  mobile-s: 100%,
+  mobile-l: 100%,
+  tablet-s: 720px,
+  tablet-l: 780px,
+  tablet-ls: 960px,
+  tablet-lp: 1140px,
+  laptop-l: 1200px,
+  pc-xs: 1320px,
+  pc-s: 1400px,
+  pc-l: 1600px,
+);
+
+$columns: (
+  fold: 4,
+  mobile-xs: 4,
+  mobile-s: 4,
+  mobile-l: 4,
+  tablet-s: 8,
+  tablet-l: 8,
+  tablet-ls: 8,
+  tablet-lp: 8,
+  laptop-l: 12,
+  pc-xs: 12,
+  pc-s: 12,
+  pc-l: 12,
+);
+
+$gaps: (
+  fold: 16px,
+  mobile-xs: 16px,
+  mobile-s: 16px,
+  mobile-l: 20px,
+  tablet-s: 24px,
+  tablet-l: 24px,
+  tablet-ls: 32px,
+  tablet-lp: 32px,
+  laptop-l: 40px,
+  pc-xs: 40px,
+  pc-s: 48px,
+  pc-l: 60px,
+);

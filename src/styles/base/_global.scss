@@ -1,0 +1,33 @@
+@use "../utils" as *;
+
+html,
+body {
+  width: 100%;
+  overflow-x: hidden;
+  font-family:
+    "Pretendard GOV Variable",
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    sans-serif;
+  display: flex;
+}
+
+.wrap {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.container {
+  @include container-layout;
+}

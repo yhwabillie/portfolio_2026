@@ -1,0 +1,60 @@
+@use '../utils' as *;
+
+.btn {
+  display: inline-flex;
+  min-width: rem-calc(48px);
+  height: rem-calc(48px);
+  border-radius: rem-calc(24px);
+  background-color: #eeeeee;
+  align-items: center;
+  padding: 0 rem-calc(24px);
+  cursor: pointer;
+
+  &__label {
+    font-size: rem-calc(18px);
+    color: #111;
+    font-weight: 500;
+  }
+
+  &__icon {
+    color: #111;
+  }
+
+  @include mq(tablet-ls) {
+    min-width: rem-calc(40px);
+    height: rem-calc(40px);
+    border-radius: rem-calc(20px);
+
+    &:has(.btn__icon) {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &__icon {
+      color: #111;
+    }
+  }
+}
+
+.icon-btn {
+  display: inline-flex;
+  min-width: rem-calc(48px);
+  height: rem-calc(48px);
+  border-radius: rem-calc(24px);
+  background-color: #eeeeee;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  @include mq(tablet-ls) {
+    min-width: rem-calc(40px);
+    height: rem-calc(40px);
+    border-radius: rem-calc(20px);
+  }
+
+  &__icon {
+    color: #111;
+  }
+}

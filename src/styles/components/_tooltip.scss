@@ -1,0 +1,81 @@
+@use '../utils' as *;
+
+[data-tooltip] {
+  position: relative;
+
+  &::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 11px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    padding: rem-calc(8px) rem-calc(12px);
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: white;
+    font-size: rem-calc(13px);
+    font-weight: 500;
+    line-height: 1;
+    border-radius: rem-calc(6px);
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 100;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  // 삼각형 (Arrow)
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    border-width: rem-calc(6px) rem-calc(6px) 0 rem-calc(6px);
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.85) transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.25, 1, 0.5, 1);
+    z-index: 100;
+    will-change: transform, opacity;
+    backface-visibility: hidden;
+  }
+
+  &:hover {
+    &::after,
+    &::before {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  // 방향 제어 (Optional: data-tooltip-pos="bottom")
+  &[data-tooltip-pos='bottom'] {
+    &::after {
+      bottom: auto;
+      top: calc(100% + 11px);
+      transform: translateX(-50%) translateY(-5px);
+    }
+    &::before {
+      bottom: auto;
+      top: calc(100% + 7px);
+      transform: translateX(-50%) translateY(-5px);
+      border-width: 0 rem-calc(6px) rem-calc(6px) rem-calc(6px);
+      border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent;
+    }
+    &:hover {
+      &::after,
+      &::before {
+        transform: translateX(-50%) translateY(0);
+      }
+    }
+  }
+}
