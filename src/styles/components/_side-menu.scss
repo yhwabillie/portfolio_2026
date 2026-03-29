@@ -10,6 +10,7 @@
   align-items: stretch;
   justify-content: flex-start;
   overflow: hidden;
+  z-index: 10000;
 
   &__overlay {
     position: absolute;
@@ -19,13 +20,13 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
     will-change: opacity;
-    z-index: 1000;
+    z-index: 10000;
     cursor: pointer;
   }
 
   &__nav {
     position: relative;
-    z-index: 1001;
+    z-index: 10001;
     width: calc(100% - rem-calc(1px));
     height: calc(100dvh - rem-calc(32px));
     margin: rem-calc(16px);

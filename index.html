@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/EasePack.min.js" defer></script>
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" defer></script>
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.4/dist/lottie-player.js" defer></script>
     <script type="module" src="/src/main.js"></script>
     <title>포트폴리오 2026</title>
   </head>
@@ -198,24 +198,47 @@
             </section>
           </div>
         </div>
-        <section id="about" class="about">
+        <div id="about-intro" class="about__scroll-track">
           <div class="container">
-            <h2>section 02 : About</h2>
-            <p>section description</p>
+            <h2 class="about__section-title">ABOUT</h2>
+            <p class="about__section-sub">웹 퍼블리셔로서 이런 작업들을 경험해왔습니다.</p>
           </div>
-        </section>
-        <section id="career" class="career">
-          <div class="container">
-            <h2>section 03 : Career</h2>
-            <p>section description</p>
+          <div class="about__sticky-wrap">
+            <div class="about__content">
+              <div class="about__img-area">
+                <img class="about__img-cover" src="src/assets/images/entry-im-01.jpg" alt="" />
+              </div>
+              <div class="about__title-area">
+                <h2 class="about__title">
+                  <span class="about__title-main">UI 시스템 가이드</span>
+                  <span class="about__title-sub">UI SYSTEM GUIDE</span>
+                </h2>
+              </div>
+            </div>
+            <div class="about__content">
+              <div class="about__img-area">
+                <img class="about__img-cover" src="src/assets/images/entry-im-02.jpg" alt="" />
+              </div>
+              <div class="about__title-area">
+                <h2 class="about__title">
+                  <span class="about__title-main">UI 인터랙션 / 반응형</span>
+                  <span class="about__title-sub">INTERACTION / RESPONSIVE</span>
+                </h2>
+              </div>
+            </div>
+            <div class="about__content">
+              <div class="about__img-area">
+                <img class="about__img-cover" src="src/assets/images/entry-im-03.jpg" alt="" />
+              </div>
+              <div class="about__title-area">
+                <h2 class="about__title">
+                  <span class="about__title-main">데이터 시각화</span>
+                  <span class="about__title-sub">DATA VISUALIZATION</span>
+                </h2>
+              </div>
+            </div>
           </div>
-        </section>
-        <section id="works" class="works">
-          <div class="container">
-            <h2>section 04 : Works</h2>
-            <p>section description</p>
-          </div>
-        </section>
+        </div>
       </main>
       <footer id="footer" class="footer">
         <div class="container">footer</div>

@@ -94,7 +94,7 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
         { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', duration: 1 },
         '<',
       )
-      .to('.hero__desc-wrap', { opacity: 0, duration: 0.5, ease: 'none' }, '>')
+      .to('.hero__desc-wrap', { opacity: 0, y: 40, ease: 'none' }, '>')
       // 5. hero__desc-wrap의 투명도 애니메이션이 시작되는 시점('<')으로 헤더 애니메이션 동기화
       .add(() => {
         if (window.setHeaderFluid) window.setHeaderFluid(true);
@@ -103,136 +103,6 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
         // 역방향 스크롤 시 해제 (0.1초 정도의 매우 짧은 구간 추가)
         if (window.setHeaderFluid) window.setHeaderFluid(false);
       }, '<-=0.01');
-
-    // 이미지 각자가 스스로 화면 밑바닥(top bottom)에 닿을 때만 개별적으로 켜지도록 완전히 독립 계산
-    const images = gsap.utils.toArray('.about__image-wrap img');
-    imgRevealStrays = [];
-
-    images.forEach((img) => {
-      const imgTween = gsap.fromTo(
-        img,
-        { opacity: 0 }, // 제자리에서 투명하게만 대기
-        {
-          opacity: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: img,
-            start: 'top bottom-=200',
-            end: '+=300', // 약 200px 스크롤 내에 스크럽을 통한 투명도 1 전환
-            scrub: 1,
-          },
-        },
-      );
-      imgRevealStrays.push(imgTween);
-    });
-
-    // 알려주신 비율과 스케일을 그대로 GSAP 속성 객체로 분리하여 vw, vh 단위를 강제 보존
-    const initialTransforms = [
-      { x: '-16vw', y: '-80vh', z: '0px', scale: 3, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
-      { x: '17vw', y: '-68vh', z: '0px', scale: 2, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
-      { x: '27vw', y: '-41vh', z: '0px', scale: 3, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
-    ];
-    const targetTransform = {
-      x: '0vw',
-      y: '0vh',
-      z: '0px',
-      scale: 1,
-      rotationX: 0,
-      rotationY: 0,
-      rotationZ: 0,
-      skewX: 0,
-      skewY: 0,
-    };
-
-    // 초기 Transform 및 will-change를 실제 DOM에 최우선적으로 적용
-    images.forEach((img, idx) => {
-      gsap.set(img, {
-        ...initialTransforms[idx],
-        transformStyle: 'preserve-3d',
-        willChange: 'transform, opacity',
-      });
-    });
-
-    // [2단계] 위치 애니메이션: 브라우저 환경에 따라 길이가 유동적이므로, 고정 px(+=1000)을 버리고 두 요소 사이의 물리적 거리를 기준으로 1:1 동기화시킴
-    const resetTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '.about__sticky-wrap',
-        start: 'top 80%', // 상단에서 60% (기존 20% 대비 스크롤을 훨씬 덜 내린 이른 시점)에 도달하면 복귀 모션 먼저 시작
-        endTrigger: '.about__second-bg', // 닫히는 트리거 기준점인 second-bg를 도착선으로 설정
-        end: 'top 80%', // second-bg가 80% 지점에 도착하는 순간 복귀 애니메이션을 무조건 100% 완료하도록 수학적으로 묶음! (opacity 60%보다 무조건 먼저 끝남 보장)
-        scrub: true, // 딜레이 잔상을 제거하여 resize 시에도 싱크가 어긋나지 않게 꽉 잡아줌
-      },
-    });
-
-    // 각 이미지의 Transform 복구 (위치와 스케일)
-    images.forEach((img, index) => {
-      resetTl.fromTo(
-        img,
-        initialTransforms[index],
-        {
-          ...targetTransform,
-          ease: 'none',
-          immediateRender: false,
-        },
-        index * 0.1, // 순차적(stagger) 진입
-      );
-    });
-
-    // about__second-bg 진입 시점에 맞춰 3가지 요소가 자석처럼 순서대로 빠르게 닫히는 타임라인
-    const snapTl = gsap.timeline({
-      scrollTrigger: {
-        trigger: '.about__second-bg',
-        // 투명도가 먼저 꺼진 다음(top 60%) 크기가 줄어들어야(top 50%) 하므로 50%로 셋팅
-        start: 'top 50%',
-        toggleActions: 'play reverse play reverse', // 스크럽 없이 한 번에 지정된 속도로 팍 닫힘
-      },
-    });
-
-    // GSAP이 자동 역계산 시 픽셀(px)로 변환하는 것을 막기 위해, CSS의 원본 단위(vw)를 명시적으로 fromTo로 전달
-    snapTl
-      .fromTo('.about__button-wrap', { width: '13vw' }, { width: '0vw', ease: 'power3.inOut', duration: 0.6 })
-      .fromTo('.lottie__wrap', { width: '10vw' }, { width: '0vw', ease: 'power3.inOut', duration: 0.6 }, '<0.1')
-      .fromTo(
-        '.about__image-resize',
-        { width: '18vw', willChange: 'width, height' },
-        { width: '0vw', ease: 'power3.inOut', duration: 0.6 },
-        '<0.1',
-      );
-
-    imgRevealStrays.push(snapTl);
-
-    // opacity만 스크럽(늘어짐) 없이 지정 지점에 닿자마자 "번쩍!" 하고 즉각 사라지도록 별도 분리
-    const btnOpacityTween = gsap.fromTo(
-      '.about__visual-btn, .lottie-arrow, .about__image-wrap', // 요소가 닫히기 전에 반짝! 하고 사라질 세 가지 공통 타겟
-      { opacity: 1, willChange: 'opacity' },
-      {
-        opacity: 0,
-        ease: 'power1.out',
-        duration: 0.1, // 스크롤과 무관하게 0.1초 만에 찰나로 번쩍 사라짐
-        scrollTrigger: {
-          trigger: '.about__second-bg',
-          // 기존 'top 50%' -> 'top 60%' 변경: 크기가 줄어들기 전(top 50%)에 투명도가 제일 먼저(top 60%) 사라짐
-          start: 'top 60%',
-          toggleActions: 'play none none reverse', // 아래로 계속 스크롤할 때는 투명상태 유지, 완전히 위로 올렸을 때만 원상복구(reverse)
-        },
-      },
-    );
-    imgRevealStrays.push(btnOpacityTween);
-
-    // about__second-bg 상단이 브라우저 상단에 닿았을 때, 빅 텍스트들이 순서대로 아래로 내려감
-    const bigTextTween = gsap.to('.about__line .big-text__base', {
-      y: 200, // 스크롤을 내릴수록 글씨가 200px 씩 아래로 내려감 (화면 뒤로 빠지는 효과)
-      ease: 'power1.inOut',
-      scrollTrigger: {
-        trigger: '.about__second-bg',
-        start: 'top -20%', // 닫히는 모션이 일어나고 조금 뒤부터 진입
-        end: 'top -120%', // 이 지점까지 스크롤하는 동안 '무조건' y: 200 도달을 보장함
-        scrub: 1, // 스크롤을 빨리하면 빨리 내려가고, 멈추면 멈춤 (스킵 불가)
-      },
-    });
-    imgRevealStrays.push(bigTextTween);
-
-    imgRevealStrays.push(resetTl);
 
     // 마지막으로 모든 트리거 계산 강제 업데이트
     ScrollTrigger.refresh();
@@ -259,5 +129,113 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
         tween.kill();
       });
     }
+  };
+}
+
+export function initAboutAnimation({ gsap, ScrollTrigger }) {
+  if (!gsap || !ScrollTrigger) return () => {};
+
+  const init = () => {
+    const mm = gsap.matchMedia();
+
+    mm.add('(min-width: 769px)', () => {
+      const aboutTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.about__scroll-track',
+          start: 'top top',
+          end: 'bottom bottom',
+          pin: '.about__sticky-wrap',
+          scrub: 1,
+          invalidateOnRefresh: true,
+          anticipatePin: 1,
+        },
+      });
+
+      const contents = gsap.utils.toArray('.about__content');
+
+      // 초기 상태 설정
+      contents.forEach((content, i) => {
+        if (i === 0) {
+          gsap.set(content, {
+            zIndex: 1,
+            width: '100%',
+            marginLeft: '0%',
+            marginRight: '0%',
+          });
+        } else {
+          gsap.set(content, {
+            zIndex: i + 1,
+            width: '0%',
+            marginLeft: '50%',
+            marginRight: '50%',
+          });
+        }
+      });
+
+      // 1. 전역 스케일 애니메이션
+      aboutTl.fromTo(
+        '.about__img-area',
+        { xPercent: -50, yPercent: -50, scale: 0.8 },
+        {
+          xPercent: -50,
+          yPercent: -50,
+          scale: 1,
+          ease: 'none',
+          duration: contents.length,
+        },
+        0,
+      );
+
+      // 2. 순차적 가로 확장
+      contents.forEach((content, i) => {
+        const title = content.querySelector('.about__title');
+        const titleMain = content.querySelector('.about__title-main');
+        const titleSub = content.querySelector('.about__title-sub');
+
+        const label = `step-${i}`;
+        aboutTl.add(label, i);
+
+        if (i > 0) {
+          aboutTl.to(
+            content,
+            {
+              width: '100%',
+              marginLeft: '0%',
+              marginRight: '0%',
+              ease: 'power3.inOut',
+              duration: 1,
+            },
+            label,
+          );
+        }
+
+        if (title) {
+          gsap.set([titleMain, titleSub], {
+            y: 0,
+            autoAlpha: 1,
+          });
+        }
+      });
+
+      return () => {
+        // Cleanup is handled by matchMedia
+      };
+    });
+
+    ScrollTrigger.refresh();
+  };
+
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+
+  return () => {
+    window.removeEventListener('load', init);
+    const triggers = ScrollTrigger.getAll();
+    triggers.forEach((t) => {
+      if (t.trigger === '.about__scroll-track') t.kill();
+    });
   };
 }

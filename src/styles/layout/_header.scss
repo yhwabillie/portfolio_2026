@@ -56,6 +56,11 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    transition: all 0.3s ease-in-out;
+
+    .is-scrolled & {
+      margin-top: rem-calc(16px);
+    }
 
     @include mq(tablet-ls) {
       position: initial;
@@ -86,6 +91,10 @@
 
     &-sub {
       font-size: rem-calc(14px);
+
+      .is-scrolled & {
+        opacity: 0;
+      }
 
       @include mq(tablet-ls) {
         font-size: rem-calc(12px);

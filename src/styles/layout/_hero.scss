@@ -54,7 +54,7 @@
   &__title-base {
     grid-column-gap: #{vw-calc(60px)};
     grid-row-gap: #{vw-calc(60px)};
-    color: gray;
+    color: #eeeeee;
     justify-content: flex-start;
     align-items: center;
     display: flex;
@@ -86,7 +86,7 @@
     white-space: nowrap;
     overflow: visible;
     padding-right: 30vw;
-    clip-path: inset(0% 100% 0% 0%); // <-- Prevent flash of black text before JS runs
+    clip-path: inset(0% 100% 0% 0%);
   }
 
   &__big-text {
@@ -110,7 +110,7 @@
     align-items: center;
     padding: #{vw-calc(20px)};
     border-radius: #{vw-calc(88px)};
-    background-color: gray;
+    background-color: #eeeeee;
   }
 
   &-accent {
@@ -127,9 +127,8 @@
       position: absolute;
       width: 100%;
       height: #{vw-calc(14px)};
-      background-color: white;
+      background-color: #111;
 
-      // 각도 데이터 매핑
       $rotations: (
         2: 90deg,
         3: 45deg,
@@ -147,7 +146,7 @@
   &__desc-wrap {
     width: fit-content;
     position: absolute;
-    inset: auto 0 vw-calc(55px) auto;
+    inset: auto 0 0 auto;
 
     @include mq(tablet-ls) {
       width: 100%;
@@ -158,6 +157,7 @@
       font-size: #{fluid(14px, 24px)};
       font-weight: 400;
       line-height: 1.5;
+      margin-bottom: #{rem-calc(109px)};
     }
   }
 }
