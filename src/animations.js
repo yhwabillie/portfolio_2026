@@ -235,7 +235,133 @@ export function initAboutAnimation({ gsap, ScrollTrigger }) {
     window.removeEventListener('load', init);
     const triggers = ScrollTrigger.getAll();
     triggers.forEach((t) => {
-      if (t.trigger === '.about__scroll-track') t.kill();
+      if (t.trigger === '.about__scroll-track') t.trigger.kill();
     });
+  };
+}
+
+export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
+  if (!gsap || !ScrollTrigger) return () => {};
+
+  const mm = gsap.matchMedia();
+
+  const init = () => {
+    // Desktop Animation (Complex 3D + Sequence)
+    mm.add('(min-width: 769px)', () => {
+      const images = gsap.utils.toArray('.about-main__img');
+      const initialTransforms = [
+        { x: '-16vw', y: '-80vh', z: '0vw', scale: 3, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
+        { x: '-2vw', y: '-48vh', z: '0vh', scale: 2, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
+        { x: '27vw', y: '-41vh', z: '0vw', scale: 3, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
+      ];
+
+      // 1. Initial Scatter State
+      images.forEach((img, idx) => {
+        gsap.set(img, {
+          ...initialTransforms[idx % initialTransforms.length],
+          transformStyle: 'preserve-3d',
+          willChange: 'transform, opacity',
+        });
+      });
+
+      // 2. Magnet (Scrub) Timeline
+      const magnetTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.about-main',
+          start: 'top 95%',
+          end: 'top 30%',
+          scrub: 1,
+        },
+      });
+
+      images.forEach((img, index) => {
+        magnetTl.to(
+          img,
+          {
+            x: '0vw',
+            y: '0vh',
+            z: '0vw',
+            scale: 1,
+            ease: 'none',
+          },
+          index * 0.1,
+        );
+      });
+
+      // 3. Entrance (Static Reveal) Timeline
+      const entranceTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.about-main',
+          start: 'top 80%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+
+      entranceTl
+        .from('.about-main__title', {
+          y: 50,
+          opacity: 0,
+          duration: 1.2,
+          ease: 'power3.out',
+        })
+        .from(
+          '.about-main__visual',
+          {
+            x: -80,
+            scale: 0.9,
+            opacity: 0,
+            duration: 1.5,
+            ease: 'expo.out',
+          },
+          '-=0.8',
+        )
+        .from(
+          '.about-main__paragraph',
+          {
+            x: 100,
+            opacity: 0,
+            duration: 1.5,
+            ease: 'expo.out',
+          },
+          '-=1.2',
+        )
+        .from(
+          '.about-main__paragraph p',
+          {
+            y: 20,
+            opacity: 0,
+            stagger: 0.15,
+            duration: 0.8,
+            ease: 'power2.out',
+          },
+          '-=0.6',
+        );
+    });
+
+    // Mobile Optimization
+    mm.add('(max-width: 768px)', () => {
+      gsap.from('.about-main__paragraph p', {
+        y: 20,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 1,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: '.about-main__sub-text',
+          start: 'top 85%',
+        },
+      });
+    });
+  };
+
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+
+  return () => {
+    window.removeEventListener('load', init);
+    mm.revert();
   };
 }
