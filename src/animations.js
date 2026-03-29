@@ -335,6 +335,16 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
             ease: 'power2.out',
           },
           '-=0.6',
+        )
+        .to(
+          '.about-main__accent',
+          {
+            backgroundSize: '100% 100%',
+            stagger: 0.4,
+            duration: 1.2,
+            ease: 'power2.inOut',
+          },
+          '>',
         );
     });
 
