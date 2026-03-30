@@ -46,6 +46,14 @@
 
   &__item {
     position: relative;
+    border: rem-calc(1px) solid;
+    border-radius: fluid(20px, 50px);
+    overflow: hidden;
+
+    @include mq(laptop-l) {
+      border-radius: initial;
+      border: initial;
+    }
 
     &:nth-child(1) {
       .works__item-overlay {
@@ -54,8 +62,20 @@
     }
 
     &-image {
-      border: rem-calc(1px) solid;
       aspect-ratio: 16/9;
+      position: relative;
+
+      video,
+      img {
+        width: 100%;
+        height: 100%;
+        object-position: top;
+        object-fit: cover;
+      }
+
+      @include mq(laptop-l) {
+        border: rem-calc(1px) solid;
+      }
     }
 
     &-desc {
@@ -83,7 +103,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      background-color: rgba(0, 0, 0, 0.5);
+      background-color: rgba(0, 0, 0, 0.65);
+      z-index: 1;
 
       @include mq(laptop-l) {
         display: none;
@@ -155,7 +176,7 @@
     display: flex;
     flex-direction: column;
     margin-top: auto;
-    gap: fluid(10px, 30px);
+    gap: fluid(10px, 40px);
     opacity: 0;
     will-change: opacity;
 
@@ -184,9 +205,16 @@
         }
 
         &-text {
-          line-height: 1.5;
-          font-size: fluid(12px, 20px);
-          font-weight: 400;
+          span {
+            font-size: fluid(12px, 18px);
+            font-weight: 400;
+            display: inline-block;
+            line-height: 1.8;
+
+            &:nth-child(1) {
+              margin-bottom: fluid(10px, 20px);
+            }
+          }
         }
       }
     }
