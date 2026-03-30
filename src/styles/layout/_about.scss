@@ -225,12 +225,13 @@
     gap: fluid(8px, 20px);
     margin: 0 auto fluid(20px, 0px);
     width: fit-content;
-    // border: rem-calc(8px) solid #38bdf8;
     padding: 0 rem-calc(20px);
     background-size: 0% 100%;
     background-repeat: no-repeat;
     background-position: 0 100%;
     color: white;
+    z-index: 1;
+    mix-blend-mode: difference;
 
     @include mq(tablet-lp) {
       margin-bottom: rem-calc(20px);
