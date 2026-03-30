@@ -262,33 +262,40 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
         });
       });
 
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '.about-main',
-          start: 'top 95%',
-          end: 'top 30%',
-          scrub: 1,
-        },
-      }).to(images, {
-        x: '0vw',
-        y: '0vh',
-        z: '0vw',
-        scale: 1,
-        ease: 'none',
-        stagger: 0.1,
-      });
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: '.about-main',
+            start: 'top 95%',
+            end: 'top 30%',
+            scrub: 1,
+          },
+        })
+        .to(images, {
+          x: '0vw',
+          y: '0vh',
+          z: '0vw',
+          scale: 1,
+          ease: 'none',
+          stagger: 0.1,
+        });
 
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: '.about-main',
-          start: 'top 80%',
-          toggleActions: 'play none none reverse',
-        },
-      })
-      .from('.about-main__title', { y: 50, opacity: 0, duration: 1.2, ease: 'power3.out' })
-      .from('.about-main__visual', { x: -80, scale: 0.9, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=0.8')
-      .from('.about-main__paragraph', { x: 100, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=1.2')
-      .from('.about-main__paragraph p', { y: 20, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: '.about-main',
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+        })
+        .from('.about-main__title', { y: 50, opacity: 0, duration: 1.2, ease: 'power3.out' })
+        .from('.about-main__visual', { x: -80, scale: 0.9, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=0.8')
+        .from('.about-main__paragraph', { x: 100, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=1.2')
+        .from(
+          '.about-main__paragraph p',
+          { y: 20, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power2.out' },
+          '-=0.6',
+        );
 
       // 4. Accent (Scrub + Pin) - Sequential Timeline
       const accentTl = gsap.timeline({
@@ -374,8 +381,16 @@ export function initWorksAnimation({ gsap, ScrollTrigger }) {
 
             if (self.isActive) {
               // Active: Entrance
-              gsap.fromTo(projectTitle, { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true });
-              gsap.fromTo(bottomItems, { opacity: 0 }, { opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true });
+              gsap.fromTo(
+                projectTitle,
+                { y: -40, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true },
+              );
+              gsap.fromTo(
+                bottomItems,
+                { opacity: 0 },
+                { opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true },
+              );
               gsap.to(overlays[index], { opacity: 0, duration: 0.4 });
             } else {
               // Inactive: Exit
