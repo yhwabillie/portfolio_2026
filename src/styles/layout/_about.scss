@@ -209,6 +209,8 @@
 .about-main {
   padding: fluid(80px, 200px) 0;
   background-color: #000;
+  position: relative;
+  z-index: 1;
 
   &__content {
     display: flex;
@@ -221,9 +223,9 @@
     justify-content: center;
     align-items: center;
     gap: fluid(8px, 20px);
-    margin: 0 auto fluid(20px, 60px);
+    margin: 0 auto fluid(20px, 0px);
     width: fit-content;
-    border: rem-calc(8px) solid #000;
+    // border: rem-calc(8px) solid #38bdf8;
     padding: 0 rem-calc(20px);
     background-size: 0% 100%;
     background-repeat: no-repeat;
@@ -255,10 +257,10 @@
     grid-column: span 6;
     display: flex;
     justify-content: center;
-    // border: rem-calc(10px) solid black;
-    // background-color: #f5f5f5;
-    // aspect-ratio: 1/1;
-    // overflow: hidden;
+
+    @include mq(pc-s) {
+      grid-column: span 8;
+    }
 
     @include mq(tablet-lp) {
       display: none;
@@ -274,17 +276,24 @@
   }
 
   &__paragraph {
+    // border: rem-calc(8px) solid #38bdf8;
     grid-column: span 6;
     display: flex;
     flex-direction: column;
-    gap: fluid(20px, 40px);
-    background-color: #0284c7;
+    gap: fluid(10px, 20px);
+    background-color: #444444;
     color: #fff;
     padding: fluid(20px, 100px) fluid(20px, 100px);
     position: relative;
     z-index: 10;
     margin-left: rem-calc(-200px);
     border-radius: rem-calc(180px) rem-calc(180px) rem-calc(180px) 0px;
+
+    @include mq(pc-s) {
+      grid-column: span 4;
+      margin-left: rem-calc(-400px);
+      border-radius: rem-calc(200px) rem-calc(200px) rem-calc(200px) 0px;
+    }
 
     @include mq(tablet-lp) {
       grid-column: span 12;
@@ -303,12 +312,16 @@
   &__accent {
     display: inline;
     color: inherit;
-    font-weight: 500;
+    font-weight: 600;
     background: linear-gradient(transparent 0%, rgb(252, 242, 164) 0%);
     background-size: 0% 100%;
     background-repeat: no-repeat;
     background-position: 0 100%;
     color: #000;
+
+    @include mq(tablet-lp) {
+      background: linear-gradient(transparent 0%, rgb(252, 242, 164) 0%);
+    }
   }
 
   &__img-wrap {

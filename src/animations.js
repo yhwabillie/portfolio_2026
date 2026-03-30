@@ -246,7 +246,6 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
   const mm = gsap.matchMedia();
 
   const init = () => {
-    // Desktop Animation (Complex 3D + Sequence)
     mm.add('(min-width: 769px)', () => {
       const images = gsap.utils.toArray('.about-main__img');
       const initialTransforms = [
@@ -255,7 +254,6 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
         { x: '27vw', y: '-41vh', z: '0vw', scale: 3, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
       ];
 
-      // 1. Initial Scatter State
       images.forEach((img, idx) => {
         gsap.set(img, {
           ...initialTransforms[idx % initialTransforms.length],
@@ -264,91 +262,55 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
         });
       });
 
-      // 2. Magnet (Scrub) Timeline
-      const magnetTl = gsap.timeline({
+      gsap.timeline({
         scrollTrigger: {
           trigger: '.about-main',
           start: 'top 95%',
           end: 'top 30%',
           scrub: 1,
         },
+      }).to(images, {
+        x: '0vw',
+        y: '0vh',
+        z: '0vw',
+        scale: 1,
+        ease: 'none',
+        stagger: 0.1,
       });
 
-      images.forEach((img, index) => {
-        magnetTl.to(
-          img,
-          {
-            x: '0vw',
-            y: '0vh',
-            z: '0vw',
-            scale: 1,
-            ease: 'none',
-          },
-          index * 0.1,
-        );
-      });
-
-      // 3. Entrance (Static Reveal) Timeline
-      const entranceTl = gsap.timeline({
+      gsap.timeline({
         scrollTrigger: {
           trigger: '.about-main',
           start: 'top 80%',
           toggleActions: 'play none none reverse',
         },
+      })
+      .from('.about-main__title', { y: 50, opacity: 0, duration: 1.2, ease: 'power3.out' })
+      .from('.about-main__visual', { x: -80, scale: 0.9, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=0.8')
+      .from('.about-main__paragraph', { x: 100, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=1.2')
+      .from('.about-main__paragraph p', { y: 20, opacity: 0, stagger: 0.15, duration: 0.8, ease: 'power2.out' }, '-=0.6');
+
+      // 4. Accent (Scrub + Pin) - Sequential Timeline
+      const accentTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.about-main',
+          start: 'top top',
+          end: '+=100%', // Increased scroll duration for sequential feel
+          scrub: 1,
+          pin: true,
+          pinSpacing: true,
+          anticipatePin: 1,
+        },
       });
 
-      entranceTl
-        .from('.about-main__title', {
-          y: 50,
-          opacity: 0,
-          duration: 1.2,
-          ease: 'power3.out',
-        })
-        .from(
-          '.about-main__visual',
-          {
-            x: -80,
-            scale: 0.9,
-            opacity: 0,
-            duration: 1.5,
-            ease: 'expo.out',
-          },
-          '-=0.8',
-        )
-        .from(
-          '.about-main__paragraph',
-          {
-            x: 100,
-            opacity: 0,
-            duration: 1.5,
-            ease: 'expo.out',
-          },
-          '-=1.2',
-        )
-        .from(
-          '.about-main__paragraph p',
-          {
-            y: 20,
-            opacity: 0,
-            stagger: 0.15,
-            duration: 0.8,
-            ease: 'power2.out',
-          },
-          '-=0.6',
-        )
-        .to(
-          '.about-main__accent',
-          {
-            backgroundSize: '100% 100%',
-            stagger: 0.4,
-            duration: 1.2,
-            ease: 'power2.inOut',
-          },
-          '>',
-        );
+      gsap.utils.toArray('.about-main__accent').forEach((accent) => {
+        accentTl.to(accent, {
+          backgroundSize: '100% 100%',
+          ease: 'none',
+        });
+      });
     });
 
-    // Mobile Optimization
     mm.add('(max-width: 768px)', () => {
       gsap.from('.about-main__paragraph p', {
         y: 20,
@@ -360,6 +322,80 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
           trigger: '.about-main__sub-text',
           start: 'top 85%',
         },
+      });
+    });
+  };
+
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+
+  return () => {
+    window.removeEventListener('load', init);
+    mm.revert();
+  };
+}
+
+export function initWorksAnimation({ gsap, ScrollTrigger }) {
+  if (!gsap || !ScrollTrigger) return () => {};
+
+  const mm = gsap.matchMedia();
+
+  const init = () => {
+    const items = gsap.utils.toArray('.works__item');
+    const overlays = gsap.utils.toArray('.works__item-overlay');
+    const projectTitles = gsap.utils.toArray('.works__top-project-item');
+    const projectContents = gsap.utils.toArray('.works__bottom-content-item');
+    const projectSkills = gsap.utils.toArray('.works__bottom-skills-item');
+
+    mm.add('(min-width: 1280px)', () => {
+      // Section Entrance
+      gsap.to(['.works__top', '.works__bottom'], {
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.works',
+          start: 'top 30%',
+          toggleActions: 'play none none reverse',
+        },
+      });
+
+      items.forEach((item, index) => {
+        ScrollTrigger.create({
+          trigger: item,
+          start: 'top 50%',
+          end: 'bottom 50%',
+          onToggle: (self) => {
+            const projectTitle = projectTitles[index];
+            const bottomItems = [projectContents[index], projectSkills[index]];
+
+            if (self.isActive) {
+              // Active: Entrance
+              gsap.fromTo(projectTitle, { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true });
+              gsap.fromTo(bottomItems, { opacity: 0 }, { opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true });
+              gsap.to(overlays[index], { opacity: 0, duration: 0.4 });
+            } else {
+              // Inactive: Exit
+              gsap.to(projectTitle, {
+                y: 40,
+                opacity: 0,
+                duration: 0.3,
+                ease: 'power2.in',
+                overwrite: true,
+              });
+              gsap.to(bottomItems, {
+                opacity: 0,
+                duration: 0.3,
+                ease: 'power2.in',
+                overwrite: true,
+              });
+              gsap.to(overlays[index], { opacity: 1, duration: 0.4 });
+            }
+          },
+        });
       });
     });
   };

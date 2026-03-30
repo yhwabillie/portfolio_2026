@@ -1,5 +1,5 @@
 // src/main.js
-import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation } from './animations.js';
+import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation } from './animations.js';
 
 /**
  * 1. Lenis 초기화 (Smooth Scroll)
@@ -173,5 +173,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header Reveal 초기화 (변경된 페이지 길이를 감지하여 정확한 위치 계산)
     initHeaderReveal({ gsap, ScrollTrigger });
+
+    // Works 섹션 애니메이션
+    initWorksAnimation({ gsap, ScrollTrigger });
   }
 });

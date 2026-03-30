@@ -7,15 +7,14 @@
   width: 100%;
   z-index: 1000;
   padding: rem-calc(30px) 0 rem-calc(30px);
-  border-bottom: rem-calc(1px) solid var(--color-border, #eee);
+  border-bottom: rem-calc(1px) solid var(--color-border, #111);
   transition: all 0.3s ease-in-out;
   background-color: transparent;
 
   &.is-scrolled {
     padding: rem-calc(15px) 0;
-    background-color: rgba(255, 255, 255, 0.8);
+    // background-color: color-mix(in srgb, transparent 80%, transparent);
     backdrop-filter: blur(10px);
-    border-color: rgba(0, 0, 0, 0.1);
   }
 
   @include mq(tablet-ls) {
