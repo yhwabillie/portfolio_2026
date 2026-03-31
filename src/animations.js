@@ -383,8 +383,8 @@ export function initWorksAnimation({ gsap, ScrollTrigger }) {
               // Active: Entrance
               gsap.fromTo(
                 projectTitle,
-                { y: -40, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true },
+                { y: -40, opacity: 0, zIndex: 1 },
+                { y: 0, opacity: 1, zIndex: 10, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true },
               );
               gsap.fromTo(
                 bottomItems,
@@ -397,6 +397,7 @@ export function initWorksAnimation({ gsap, ScrollTrigger }) {
               gsap.to(projectTitle, {
                 y: 40,
                 opacity: 0,
+                zIndex: 1,
                 duration: 0.3,
                 ease: 'power2.in',
                 overwrite: true,

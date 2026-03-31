@@ -58,3 +58,57 @@
     color: #111;
   }
 }
+
+.link-btn {
+  position: relative;
+  z-index: 20; // Ensure it's above GSAP transform layers
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: rem-calc(8px);
+  height: fluid(30px, 42px);
+  padding: 0 fluid(14px, 16px);
+  border-radius: rem-calc(8px);
+  background-color: #111;
+  cursor: pointer !important; // Force pointer even after GSAP
+  pointer-events: auto; // Ensure events are captured
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  margin: rem-calc(30px) rem-calc(10px) rem-calc(10px) rem-calc(10px);
+
+  &.outline {
+    background-color: rgba(255, 255, 255, 1);
+    border: rem-calc(1px) solid #111;
+
+    &:hover {
+      background-color: #eeeeee;
+    }
+
+    .link-btn__label {
+      color: #000;
+    }
+
+    .link-btn__icon {
+      color: #000;
+    }
+  }
+
+  &:hover {
+    background-color: #555;
+  }
+
+  &__label {
+    font-size: fluid(12px, 14px);
+    color: white;
+    pointer-events: none;
+    line-height: 1;
+    font-weight: 500;
+  }
+
+  &__icon {
+    color: white;
+    pointer-events: none;
+    width: fluid(16px, 18px);
+    height: fluid(16px, 18px);
+  }
+}
