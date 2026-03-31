@@ -90,9 +90,75 @@
           margin: fluid(20px, 40px) 0 fluid(10px, 20px);
         }
 
+        &-info {
+          display: flex;
+          align-items: center;
+          margin-bottom: fluid(8px, 12px);
+
+          span {
+            line-height: 1.5;
+            font-weight: 500;
+            font-size: fluid(12px, 18px);
+            color: rgba(0, 0, 0, 0.5);
+
+            &:first-child {
+              padding-right: fluid(12px, 20px);
+              position: relative;
+
+              &::after {
+                content: '';
+                display: inline-block;
+                position: absolute;
+                width: rem-calc(1px);
+                height: 60%;
+                background-color: rgba(0, 0, 0, 0.2);
+                top: 50%;
+                transform: translateY(-50%);
+                right: fluid(6px, 10px);
+              }
+            }
+          }
+        }
+
+        &-skills {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 6px;
+          margin-bottom: fluid(14px, 20px);
+
+          span {
+            background-color: white;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 fluid(10px, 14px);
+            height: fluid(24px, 32px);
+            border-radius: rem-calc(1000px);
+            border: rem-calc(1px) solid #111;
+            font-size: fluid(12px, 14px);
+            font-weight: 500;
+            line-height: 1;
+          }
+        }
+
         &-sub {
           line-height: 1.5;
           font-size: fluid(14px, 20px);
+        }
+
+        & > .link-btn {
+          margin-left: 0;
+        }
+
+        .btn-wrap {
+          display: flex;
+
+          a {
+            &:first-child {
+              margin-left: 0;
+              margin-right: 0;
+            }
+          }
         }
       }
     }
@@ -148,15 +214,10 @@
 
     &-project-item {
       opacity: 0;
-      transform: translateY(-100%);
-      transition:
-        opacity 0.3s ease,
-        transform 0.3s ease;
 
       &:nth-child(1) {
         position: relative;
         opacity: 1;
-        transform: translateY(0);
       }
 
       &:nth-child(n + 2) {
@@ -170,6 +231,16 @@
         font-size: fluid(12px, 24px);
         font-weight: 400;
         margin-left: rem-calc(10px);
+      }
+
+      .btn-wrap {
+        display: flex;
+
+        a {
+          &:first-child {
+            margin-right: 0;
+          }
+        }
       }
     }
 
@@ -216,7 +287,6 @@
 
       &-item {
         opacity: 0;
-        transition: opacity 0.3s ease;
 
         &:nth-child(1) {
           position: relative;
@@ -286,7 +356,6 @@
         justify-content: left;
         align-items: center;
         opacity: 0;
-        transition: opacity 0.3s ease;
 
         &:nth-child(1) {
           position: relative;

@@ -3,7 +3,6 @@
 .about {
   &__scroll-track {
     position: relative;
-    height: 300vh;
     background-color: var(--color-bg);
   }
 
@@ -137,8 +136,8 @@
     display: none;
   }
 
-  // 모바일 대응 (768px 이하)
-  @include mq(tablet-s) {
+  // 모바일 및 태블릿 퍼포먼스 대응 (데스크톱 외 애니메이션 미적용 후 자연스러운 구조화)
+  @include mq(tablet-lp) {
     &__title {
       gap: rem-calc(8px);
     }
@@ -154,22 +153,26 @@
 
     &__section-sub {
       display: block;
+      margin-bottom: fluid(60px, 100px);
     }
 
     &__scroll-track {
       height: auto !important;
+      padding: fluid(80px, 200px) 0 fluid(40px, 100px);
     }
 
     &__sticky-wrap {
       height: auto !important;
       overflow: visible;
+      display: flex;
+      flex-direction: column;
+      gap: fluid(60px, 100px);
     }
 
     &__content {
       position: relative !important;
-      width: 100% !important;
       height: auto;
-      padding: 0 rem-calc(24px) rem-calc(48px);
+      @include container-layout;
 
       &:nth-child(n) {
         .about__title-area {
@@ -202,6 +205,8 @@
       width: 100%;
       height: rem-calc(300px);
       border: rem-calc(1px) solid #111;
+      border-radius: rem-calc(24px);
+      overflow: hidden;
 
       &::after {
         background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
@@ -249,7 +254,7 @@
     mix-blend-mode: difference;
 
     @include mq(tablet-lp) {
-      margin-bottom: rem-calc(20px);
+      margin-bottom: fluid(60px, 100px);
     }
   }
 
@@ -259,6 +264,18 @@
     border: rem-calc(2px) solid white;
     padding: 0 fluid(20px, 40px);
     border-radius: rem-calc(1000px);
+    letter-spacing: initial;
+    overflow: hidden;
+
+    em {
+      display: inline-block;
+      font-style: normal;
+    }
+
+    @include mq(tablet-lp) {
+      font-size: fluid(32px, 48px);
+      padding: 0 fluid(16px, 24px);
+    }
   }
 
   &__sub-text {
@@ -300,24 +317,27 @@
     display: flex;
     flex-direction: column;
     gap: fluid(10px, 20px);
-    background-color: #333333;
+    background-color: #111;
     color: #fff;
     padding: fluid(20px, 100px) fluid(20px, 100px);
     position: relative;
     z-index: 10;
     margin-left: rem-calc(-200px);
-    border-radius: rem-calc(180px) rem-calc(180px) rem-calc(180px) 0px;
+    border-radius: rem-calc(30px);
+    margin-top: rem-calc(-100px);
 
     @include mq(pc-s) {
       grid-column: span 4;
       margin-left: rem-calc(-400px);
-      border-radius: rem-calc(200px) rem-calc(200px) rem-calc(200px) 0px;
+      margin-top: 0;
     }
 
     @include mq(tablet-lp) {
       grid-column: span 12;
-      border-radius: 0;
       margin-left: 0;
+      margin-top: 0;
+      border-radius: rem-calc(24px);
+      padding: fluid(40px, 60px) rem-calc(24px);
     }
 
     p {
@@ -340,6 +360,7 @@
 
     @include mq(tablet-lp) {
       background: linear-gradient(transparent 0%, rgb(252, 242, 164) 0%);
+      background-size: 100% 100%;
     }
   }
 
@@ -348,7 +369,7 @@
     width: fit-content;
     align-items: center;
 
-    @include mq(tablet-s) {
+    @include mq(tablet-lp) {
       display: none;
     }
   }

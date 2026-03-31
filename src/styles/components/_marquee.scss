@@ -1,0 +1,33 @@
+// src/styles/components/_marquee.scss
+@use '../utils' as *;
+
+.marquee_cta {
+  &_list {
+    display: flex;
+    white-space: nowrap;
+  }
+
+  &_item {
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    background-color: #111;
+    padding-right: 2vw;
+  }
+
+  &_text {
+    font-size: 5vw;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.2vw;
+    color: white;
+  }
+
+  &_icon {
+    width: 8vw;
+    height: 8vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}

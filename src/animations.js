@@ -18,8 +18,7 @@ export function initHeaderReveal({ gsap, ScrollTrigger }) {
     document.body.classList.toggle('is-scrolled', nextIsFluid);
   };
 
-  // setFluidState를 외부에서도 사용할 수 있도록 전역/윈도우 객체 등에 임시 연결하거나,
-  // 혹은 initHeroAnimation 내부에서 처리하도록 구조를 잡습니다.
+  // setFluidState를 외부에서도 사용할 수 있도록 전역/윈도우 객체 등에 임시 연결
   window.setHeaderFluid = setFluidState;
 
   return () => {
@@ -32,26 +31,21 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
 
   let mainTl = null;
   let bgRotation = null;
-  let imgRevealStrays = [];
 
   const init = () => {
-    // 요소를 찾을 수 없으면 중단
     if (!document.querySelector('.hero__content')) return;
 
-    // 1. 초기화: 모든 ScrollTrigger 위치 재계산
     ScrollTrigger.clearScrollMemory();
     window.scrollTo(0, 0);
 
-    // 1.5. 최초 진입 시 타이틀 영역 빠르게 나타나기 (덜컹임 없이 쫀득하게)
     gsap.to('.hero__title-base > *', {
-      y: 0, // CSS에서 200px로 세팅된 것을 끌어올림
-      opacity: 1, // CSS에서 0으로 세팅된 것을 보여줌
-      duration: 1.0, // 타이밍을 살짝 여유를 주면서
-      stagger: 0.3, // 뿅뿅뿅 간격 유지
-      ease: 'expo.out', // 오버슈트(back)를 없애고 끝에서 쫀쫀하게 달라붙는 expo.out 사용
+      y: 0,
+      opacity: 1,
+      duration: 1.0,
+      stagger: 0.3,
+      ease: 'expo.out',
     });
 
-    // 2. 배경 무한 회전
     bgRotation = gsap.to('.hero-accent', {
       rotation: 360,
       duration: 6,
@@ -59,7 +53,6 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
       ease: 'none',
     });
 
-    // 3. 메인 타임라인 (Hero)
     mainTl = gsap.timeline({
       scrollTrigger: {
         trigger: '.hero__scroll-track',
@@ -73,20 +66,12 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
 
     mainTl
       .fromTo('.hero__accent-wrap', { width: '28vw' }, { width: '9vw', ease: 'none', duration: 1 })
-      // width가 줄어들 때 별표 회전이 멈추거나 꼬이는 현상을 막고,
-      // 동시에 역동적으로 굴러가도록 같은 타임라인(<)에 병합합니다.
       .to('.hero__accent-rotate', { rotation: -360, ease: 'none', duration: 0.8 }, '<')
       .to(
         '.hero__accent-shape',
-        {
-          filter: 'invert(100%)',
-          webkitFilter: 'invert(100%)',
-          ease: 'none',
-          duration: 0.1, // 시간 비중을 확 줄여서 스크롤 시 매우 빠르게(짧은 구간 안에) 변환되도록 함
-        },
+        { filter: 'invert(100%)', webkitFilter: 'invert(100%)', ease: 'none', duration: 0.1 },
         '>',
       )
-      // 4. invert 효과가 완전히 끝난 직후('>'), 타이틀 이동과 Shade 확장이 이어지도록 체이닝
       .to('.hero__moving-title', { x: '-30%', ease: 'none', duration: 1 }, '>')
       .fromTo(
         '.hero__title-shade',
@@ -95,39 +80,28 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
         '<',
       )
       .to('.hero__desc-wrap', { opacity: 0, y: 40, ease: 'none' }, '>')
-      // 5. hero__desc-wrap의 투명도 애니메이션이 시작되는 시점('<')으로 헤더 애니메이션 동기화
       .add(() => {
         if (window.setHeaderFluid) window.setHeaderFluid(true);
       }, '<')
       .add(() => {
-        // 역방향 스크롤 시 해제 (0.1초 정도의 매우 짧은 구간 추가)
         if (window.setHeaderFluid) window.setHeaderFluid(false);
       }, '<-=0.01');
 
-    // 마지막으로 모든 트리거 계산 강제 업데이트
     ScrollTrigger.refresh();
   };
 
-  // 'load' 이벤트 시점으로 지연 실행 (사용자 요구사항 반영)
   if (document.readyState === 'complete') {
     init();
   } else {
     window.addEventListener('load', init);
   }
 
-  // 정리(Cleanup) 함수 반환
   return () => {
     window.removeEventListener('load', init);
     if (bgRotation) bgRotation.kill();
     if (mainTl) {
       if (mainTl.scrollTrigger) mainTl.scrollTrigger.kill();
       mainTl.kill();
-    }
-    if (imgRevealStrays.length > 0) {
-      imgRevealStrays.forEach((tween) => {
-        if (tween.scrollTrigger) tween.scrollTrigger.kill();
-        tween.kill();
-      });
     }
   };
 }
@@ -138,88 +112,50 @@ export function initAboutAnimation({ gsap, ScrollTrigger }) {
   const init = () => {
     const mm = gsap.matchMedia();
 
-    mm.add('(min-width: 769px)', () => {
+    mm.add('(min-width: 1195px)', () => {
       const aboutTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.about__scroll-track',
           start: 'top top',
-          end: 'bottom bottom',
+          end: '+=400%', // CSS height에 의존하지 않고 애니메이션 구간을 강제로 확보하여 속도를 늦춤
           pin: '.about__sticky-wrap',
-          scrub: 1,
+          scrub: 2,
           invalidateOnRefresh: true,
           anticipatePin: 1,
         },
       });
 
       const contents = gsap.utils.toArray('.about__content');
-
-      // 초기 상태 설정
       contents.forEach((content, i) => {
         if (i === 0) {
-          gsap.set(content, {
-            zIndex: 1,
-            width: '100%',
-            marginLeft: '0%',
-            marginRight: '0%',
-          });
+          gsap.set(content, { zIndex: 1, width: '100%', marginLeft: '0%', marginRight: '0%' });
         } else {
-          gsap.set(content, {
-            zIndex: i + 1,
-            width: '0%',
-            marginLeft: '50%',
-            marginRight: '50%',
-          });
+          gsap.set(content, { zIndex: i + 1, width: '0%', marginLeft: '50%', marginRight: '50%' });
         }
       });
 
-      // 1. 전역 스케일 애니메이션
+      // 배경 이미지 스케일링은 전체 타임라인 구간에 걸쳐 서서히 진행되도록 충분한 시간(duration) 할당
       aboutTl.fromTo(
         '.about__img-area',
         { xPercent: -50, yPercent: -50, scale: 0.8 },
-        {
-          xPercent: -50,
-          yPercent: -50,
-          scale: 1,
-          ease: 'none',
-          duration: contents.length,
-        },
+        { xPercent: -50, yPercent: -50, scale: 1, ease: 'none', duration: contents.length * 1.5 },
         0,
       );
 
-      // 2. 순차적 가로 확장
+      // 각 카드 섹션이 일정한 간격(1.5초)으로 순차적으로 열리도록 명시적(position parameter)으로 타임라인에 배치
       contents.forEach((content, i) => {
-        const title = content.querySelector('.about__title');
-        const titleMain = content.querySelector('.about__title-main');
-        const titleSub = content.querySelector('.about__title-sub');
-
-        const label = `step-${i}`;
-        aboutTl.add(label, i);
-
         if (i > 0) {
           aboutTl.to(
             content,
-            {
-              width: '100%',
-              marginLeft: '0%',
-              marginRight: '0%',
-              ease: 'power3.inOut',
-              duration: 1,
-            },
-            label,
+            { width: '100%', marginLeft: '0%', marginRight: '0%', ease: 'power2.inOut', duration: 1.5 },
+            (i - 0.5) * 1.5, // i=1일때 0.75부터, i=2일때 2.25부터 열리기 시작 (겹치지 않고 연속성 줌)
           );
-        }
-
-        if (title) {
-          gsap.set([titleMain, titleSub], {
-            y: 0,
-            autoAlpha: 1,
-          });
         }
       });
 
-      return () => {
-        // Cleanup is handled by matchMedia
-      };
+      // 마지막 카드(데이터 시각화)가 다 열린 후에도 바로 화면이 풀려서 위로 올라가지 않고,
+      // 그 상태 그대로 잠시 머무르며 감상할 수 있도록 유휴(버퍼) 시간을 타임라인 끝부분에 추가합니다.
+      aboutTl.to({}, { duration: 1.5 });
     });
 
     ScrollTrigger.refresh();
@@ -233,25 +169,20 @@ export function initAboutAnimation({ gsap, ScrollTrigger }) {
 
   return () => {
     window.removeEventListener('load', init);
-    const triggers = ScrollTrigger.getAll();
-    triggers.forEach((t) => {
-      if (t.trigger === '.about__scroll-track') t.trigger.kill();
-    });
   };
 }
 
 export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
   if (!gsap || !ScrollTrigger) return () => {};
-
   const mm = gsap.matchMedia();
 
   const init = () => {
-    mm.add('(min-width: 769px)', () => {
+    mm.add('(min-width: 1195px)', () => {
       const images = gsap.utils.toArray('.about-main__img');
       const initialTransforms = [
-        { x: '-16vw', y: '-80vh', z: '0vw', scale: 3, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
-        { x: '-2vw', y: '-48vh', z: '0vh', scale: 2, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
-        { x: '27vw', y: '-41vh', z: '0vw', scale: 3, rotationX: 0, rotationY: 0, rotationZ: 0, skewX: 0, skewY: 0 },
+        { x: '-16vw', y: '-80vh', scale: 3 },
+        { x: '-2vw', y: '-48vh', scale: 2 },
+        { x: '27vw', y: '-41vh', scale: 3 },
       ];
 
       images.forEach((img, idx) => {
@@ -263,32 +194,14 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
       });
 
       gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: '.about-main',
-            start: 'top 95%',
-            end: 'top 30%',
-            scrub: 1,
-          },
-        })
-        .to(images, {
-          x: '0vw',
-          y: '0vh',
-          z: '0vw',
-          scale: 1,
-          ease: 'none',
-          stagger: 0.1,
-        });
+        .timeline({ scrollTrigger: { trigger: '.about-main', start: 'top 95%', end: 'top 30%', scrub: 1 } })
+        .to(images, { x: '0vw', y: '0vh', scale: 1, ease: 'none', stagger: 0.1 });
 
       gsap
         .timeline({
-          scrollTrigger: {
-            trigger: '.about-main',
-            start: 'top 80%',
-            toggleActions: 'play none none reverse',
-          },
+          scrollTrigger: { trigger: '.about-main', start: 'top 60%', toggleActions: 'play none none reverse' },
         })
-        .from('.about-main__title', { y: 50, opacity: 0, duration: 1.2, ease: 'power3.out' })
+        .from('.about-main__text em', { yPercent: 120, duration: 1.2, ease: 'power3.out', stagger: 0.2 })
         .from('.about-main__visual', { x: -80, scale: 0.9, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=0.8')
         .from('.about-main__paragraph', { x: 100, opacity: 0, duration: 1.5, ease: 'expo.out' }, '-=1.2')
         .from(
@@ -297,38 +210,19 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
           '-=0.6',
         );
 
-      // 4. Accent (Scrub + Pin) - Sequential Timeline
       const accentTl = gsap.timeline({
         scrollTrigger: {
           trigger: '.about-main',
           start: 'top top',
-          end: '+=100%', // Increased scroll duration for sequential feel
+          end: '+=100%',
           scrub: 1,
           pin: true,
           pinSpacing: true,
           anticipatePin: 1,
         },
       });
-
       gsap.utils.toArray('.about-main__accent').forEach((accent) => {
-        accentTl.to(accent, {
-          backgroundSize: '100% 100%',
-          ease: 'none',
-        });
-      });
-    });
-
-    mm.add('(max-width: 768px)', () => {
-      gsap.from('.about-main__paragraph p', {
-        y: 20,
-        opacity: 0,
-        stagger: 0.15,
-        duration: 1,
-        ease: 'power3.out',
-        scrollTrigger: {
-          trigger: '.about-main__sub-text',
-          start: 'top 85%',
-        },
+        accentTl.to(accent, { backgroundSize: '100% 100%', ease: 'none' });
       });
     });
   };
@@ -347,7 +241,6 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
 
 export function initWorksAnimation({ gsap, ScrollTrigger }) {
   if (!gsap || !ScrollTrigger) return () => {};
-
   const mm = gsap.matchMedia();
 
   const init = () => {
@@ -358,61 +251,108 @@ export function initWorksAnimation({ gsap, ScrollTrigger }) {
     const projectSkills = gsap.utils.toArray('.works__bottom-skills-item');
 
     mm.add('(min-width: 1280px)', () => {
-      // Section Entrance
       gsap.to(['.works__top', '.works__bottom'], {
         opacity: 1,
         duration: 1,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: '.works',
-          start: 'top 30%',
-          toggleActions: 'play none none reverse',
-        },
+        scrollTrigger: { trigger: '.works', start: 'top 30%', toggleActions: 'play none none reverse' },
       });
+
+      let currentIndex = 0;
+      // 초기 셋업 (첫 번째 아이템을 제외한 모든 요소를 시작 마스크 위치로 배치)
+      projectTitles.forEach((title, i) => {
+        if (i !== 0) {
+          gsap.set([title, projectContents[i], projectSkills[i]], { yPercent: 100, opacity: 0 });
+          gsap.set(overlays[i], { opacity: 1 });
+        } else {
+          gsap.set([title, projectContents[i], projectSkills[i]], { yPercent: 0, opacity: 1 });
+          gsap.set(overlays[i], { opacity: 0 });
+        }
+      });
+
+      const switchItem = (nextIndex, direction) => {
+        if (currentIndex === nextIndex) return;
+
+        const yPercentIn = direction === 1 ? 100 : -100;
+        const yPercentOut = direction === 1 ? -100 : 100;
+
+        const currentTitle = projectTitles[currentIndex];
+        const currentBottoms = [projectContents[currentIndex], projectSkills[currentIndex]];
+        const nextTitle = projectTitles[nextIndex];
+        const nextBottoms = [projectContents[nextIndex], projectSkills[nextIndex]];
+
+        // 기존 텍스트 아웃
+        if (currentTitle) {
+          gsap.to(currentTitle, { yPercent: yPercentOut, opacity: 0, zIndex: 1, duration: 0.4, ease: 'power3.inOut', overwrite: true });
+          gsap.to(currentBottoms, { yPercent: yPercentOut, opacity: 0, zIndex: 1, duration: 0.4, ease: 'power3.inOut', overwrite: true });
+          gsap.to(overlays[currentIndex], { opacity: 1, duration: 0.4, overwrite: true });
+        }
+
+        // 새 텍스트 인
+        if (nextTitle) {
+          gsap.fromTo(
+            nextTitle,
+            { yPercent: yPercentIn, opacity: 0, zIndex: 1 },
+            { yPercent: 0, opacity: 1, zIndex: 10, duration: 0.4, ease: 'power3.inOut', overwrite: true }
+          );
+          gsap.fromTo(
+            nextBottoms,
+            { yPercent: yPercentIn, opacity: 0, zIndex: 1 },
+            { yPercent: 0, opacity: 1, zIndex: 10, duration: 0.4, ease: 'power3.inOut', stagger: 0.05, overwrite: true }
+          );
+          gsap.to(overlays[nextIndex], { opacity: 0, duration: 0.4, overwrite: true });
+        }
+
+        currentIndex = nextIndex;
+      };
 
       items.forEach((item, index) => {
         ScrollTrigger.create({
           trigger: item,
           start: 'top 50%',
           end: 'bottom 50%',
-          onToggle: (self) => {
-            const projectTitle = projectTitles[index];
-            const bottomItems = [projectContents[index], projectSkills[index]];
-
-            if (self.isActive) {
-              // Active: Entrance
-              gsap.fromTo(
-                projectTitle,
-                { y: -40, opacity: 0, zIndex: 1 },
-                { y: 0, opacity: 1, zIndex: 10, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true },
-              );
-              gsap.fromTo(
-                bottomItems,
-                { opacity: 0 },
-                { opacity: 1, duration: 0.2, delay: 0.1, ease: 'power2.out', overwrite: true },
-              );
-              gsap.to(overlays[index], { opacity: 0, duration: 0.4 });
-            } else {
-              // Inactive: Exit
-              gsap.to(projectTitle, {
-                y: 40,
-                opacity: 0,
-                zIndex: 1,
-                duration: 0.3,
-                ease: 'power2.in',
-                overwrite: true,
-              });
-              gsap.to(bottomItems, {
-                opacity: 0,
-                duration: 0.3,
-                ease: 'power2.in',
-                overwrite: true,
-              });
-              gsap.to(overlays[index], { opacity: 1, duration: 0.4 });
-            }
-          },
+          onEnter: () => switchItem(index, 1),
+          onEnterBack: () => switchItem(index, -1),
         });
       });
+
+      // 프로젝트별 완벽한 스크롤 스냅(기능: 화면 중앙 정렬) 추가
+      if (items.length > 0) {
+        ScrollTrigger.create({
+          trigger: '.works',
+          start: 'top top',
+          end: 'bottom bottom',
+          snap: {
+            snapTo: (progress, self) => {
+              const scrollPos = window.scrollY || document.documentElement.scrollTop;
+              let minDistance = Infinity;
+              let targetProgress = progress;
+
+              items.forEach((item) => {
+                const rect = item.getBoundingClientRect();
+                // 절대 좌표계에서의 요소 중앙 Y값
+                const itemCenterV = rect.top + scrollPos + rect.height / 2;
+                
+                // 해당 요소의 중앙을 화면 중앙에 맞추기 위해 필요한 스크롤 Y 목표값
+                const targetScrollY = itemCenterV - window.innerHeight / 2;
+                
+                // 현재 스크롤 위치와 목표 위치까지의 픽셀 거리 계산
+                const distance = Math.abs(targetScrollY - scrollPos);
+                
+                if (distance < minDistance) {
+                  minDistance = distance;
+                  targetProgress = (targetScrollY - self.start) / (self.end - self.start);
+                }
+              });
+
+              // 타임라인 범위(0~1)를 벗어나지 않도록 클램핑
+              return Math.max(0, Math.min(1, targetProgress));
+            },
+            duration: { min: 0.2, max: 0.5 },
+            delay: 0.15, // 스크롤이 딱 멈추고 나서 살짝 뒤에 스냅 시작
+            ease: 'power2.inOut',
+          },
+        });
+      }
     });
   };
 
@@ -427,3 +367,157 @@ export function initWorksAnimation({ gsap, ScrollTrigger }) {
     mm.revert();
   };
 }
+
+/**
+ * 6. Marquee CTA 애니메이션 (User Reference Adaption)
+ */
+export const initMarqueeAnimation = ({ gsap, ScrollTrigger }) => {
+  if (!gsap || !ScrollTrigger) return () => {};
+
+  const init = () => {
+    document.querySelectorAll('.marquee_cta_wrap').forEach((element) => {
+      if (element.dataset.scriptInitialized) return;
+      element.dataset.scriptInitialized = 'true';
+
+      const marquees = element.querySelectorAll('[data-marquee-scroll-direction-target]');
+
+      marquees.forEach((marquee) => {
+        const marqueeContent = marquee.querySelector('[data-marquee-collection-target]');
+        const marqueeScroll = marquee.querySelector('[data-marquee-scroll-target]');
+
+        if (!marqueeContent || !marqueeScroll) return;
+
+        const {
+          marqueeSpeed: speed,
+          marqueeDirection: direction,
+          marqueeDuplicate: duplicate,
+          marqueeScrollSpeed: scrollSpeed,
+        } = marquee.dataset;
+
+        const marqueeSpeedAttr = parseFloat(speed) || 1;
+        const marqueeDirectionAttr = direction === 'right' ? 1 : -1;
+        const duplicateAmount = parseInt(duplicate || 0);
+        const scrollSpeedAttr = parseFloat(scrollSpeed) || 0;
+
+        const speedMultiplier = window.innerWidth < 479 ? 0.25 : window.innerWidth < 991 ? 0.5 : 1;
+        let marqueeSpeed = marqueeSpeedAttr * (marqueeContent.offsetWidth / window.innerWidth) * speedMultiplier;
+
+        // Handle scroll speed styling locally
+        marqueeScroll.style.marginLeft = `${scrollSpeedAttr * -1}%`;
+        marqueeScroll.style.width = `${scrollSpeedAttr * 2 + 100}%`;
+        marqueeScroll.style.overflow = 'hidden';
+
+        // Duplicate node explicitly for marquee infinite loop
+        if (duplicateAmount > 0) {
+          const fragment = document.createDocumentFragment();
+          for (let i = 0; i < duplicateAmount; i++) {
+            fragment.appendChild(marqueeContent.cloneNode(true));
+          }
+          marqueeScroll.appendChild(fragment);
+        }
+
+        // Configure explicit row display to prevent vertical stacking issues locally
+        marqueeScroll.style.display = 'flex';
+        marqueeScroll.style.flexFlow = 'row nowrap';
+
+        const marqueeItems = marquee.querySelectorAll('[data-marquee-collection-target]');
+        if (marqueeItems.length === 0) return;
+
+        const animation = gsap
+          .to(marqueeItems, {
+            xPercent: -100,
+            repeat: -1,
+            duration: marqueeSpeed,
+            ease: 'linear',
+          })
+          .totalProgress(0.5);
+
+        gsap.set(marqueeItems, {
+          xPercent: marqueeDirectionAttr === 1 ? 100 : -100,
+        });
+
+        animation.timeScale(marqueeDirectionAttr);
+        animation.play();
+
+        marquee.setAttribute('data-marquee-status', 'normal');
+
+        let scrollTimeout;
+
+        ScrollTrigger.create({
+          trigger: marquee,
+          start: 'top bottom',
+          end: 'bottom top',
+          onUpdate: (self) => {
+            if (self.direction === 0) return;
+
+            // 사용자 니즈 반영: "스크롤 변환에 따른 즉각적인 반응 확인 및 로그 증명"
+            const velocity = self.getVelocity();
+            const velocityScale = Math.abs(velocity) / 300;
+
+            // 위로 올릴 때 정방향(Left), 내릴 때 방향 역전(Right) -> 참조 코드 원본 규칙 복구!
+            const isInverted = self.direction === 1; // 내릴 때(1) 역전시킴
+            const currentDirection = isInverted ? -marqueeDirectionAttr : marqueeDirectionAttr;
+            const directionString = currentDirection === 1 ? 'right' : 'left';
+
+            // [증명용 로그] 스크롤 방향과 계산된 마키 흐름 배율을 콘솔에 찍습니다.
+            console.log(
+              `[Marquee 상태] 스크롤 방향: ${self.direction > 0 ? '내림(Down) 👇' : '올림(Up) 👆'} | 마키 흐름: ${directionString.toUpperCase()} ➡️ | 속도 배율: ${(currentDirection * (1 + velocityScale)).toFixed(2)}배`,
+            );
+
+            // 스크롤 중일 때 방향과 증폭된 속도를 즉각 적용
+            gsap.to(animation, {
+              timeScale: currentDirection * (1 + velocityScale),
+              duration: 0.15,
+              overwrite: true,
+            });
+
+            marquee.setAttribute('data-marquee-status', isInverted ? 'inverted' : 'normal');
+            marquee.setAttribute('data-marquee-direction', directionString); // <- CSS가 이걸 참조할수도 있으므로 실제 속성도 반전시킴
+
+            // 스크롤이 끝나는 찰나 마지막 방향을 유지하며 속도만 1배속으로 감속 복구
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+              console.log(
+                `[Marquee 감속 처리] 스크롤 멈춤 감지 ✋ -> 현재 방향(${directionString.toUpperCase()}) 유지, 1배속으로 안정화`,
+              );
+              gsap.to(animation, {
+                timeScale: currentDirection,
+                duration: 0.6,
+                ease: 'power3.out',
+                overwrite: true,
+              });
+              marquee.setAttribute('data-marquee-status', isInverted ? 'inverted' : 'normal');
+              marquee.setAttribute('data-marquee-direction', directionString);
+            }, 150);
+          },
+        });
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: marquee,
+            start: '0% 100%',
+            end: '100% 0%',
+            scrub: 0.5, // 슬라이드의 떨림 현상 방지를 위해 0에서 0.5로 개선
+          },
+        });
+
+        const scrollStart = marqueeDirectionAttr === -1 ? scrollSpeedAttr : -scrollSpeedAttr;
+        const scrollEnd = -scrollStart;
+
+        tl.fromTo(marqueeScroll, { x: `${scrollStart}vw` }, { x: `${scrollEnd}vw`, ease: 'none' });
+      });
+    });
+
+    ScrollTrigger.refresh();
+  };
+
+  if (document.readyState === 'complete') {
+    init();
+  } else {
+    window.addEventListener('load', init);
+  }
+
+  return () => {
+    window.removeEventListener('load', init);
+  };
+};

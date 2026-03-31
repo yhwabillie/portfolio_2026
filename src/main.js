@@ -1,5 +1,5 @@
 // src/main.js
-import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation } from './animations.js';
+import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initMarqueeAnimation } from './animations.js';
 
 /**
  * 1. Lenis 초기화 (Smooth Scroll)
@@ -159,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4. Hero 애니메이션 최적화 모듈 호출
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    console.log('[Main] Registering animations...');
     // ScrollTrigger 플러그인 등록 (필수)
     gsap.registerPlugin(ScrollTrigger);
 
@@ -176,5 +177,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Works 섹션 애니메이션
     initWorksAnimation({ gsap, ScrollTrigger });
+
+    // Marquee CTA 애니메이션 (try-catch로 보호하여 단독 실행 보장)
+    try {
+      console.log('[Main] Calling initMarqueeAnimation...');
+      initMarqueeAnimation({ gsap, ScrollTrigger });
+      console.log('[Main] initMarqueeAnimation finished.');
+    } catch (e) {
+      console.error('[Main] initMarqueeAnimation failed to execute:', e);
+    }
   }
 });
