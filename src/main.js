@@ -1,5 +1,5 @@
 // src/main.js
-import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initMarqueeAnimation } from './animations.js';
+import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initMarqueeAnimation, initFooterAnimation } from './animations.js';
 
 /**
  * 1. Lenis 초기화 (Smooth Scroll)
@@ -238,6 +238,15 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('[Main] initMarqueeAnimation finished.');
     } catch (e) {
       console.error('[Main] initMarqueeAnimation failed to execute:', e);
+    }
+
+    // 8. Footer 애니메이션 (Matter.js + GSAP)
+    try {
+      console.log('[Main] Calling initFooterAnimation...');
+      initFooterAnimation({ gsap, ScrollTrigger });
+      console.log('[Main] initFooterAnimation finished.');
+    } catch (e) {
+      console.error('[Main] initFooterAnimation failed to execute:', e);
     }
   }
 });

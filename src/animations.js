@@ -265,10 +265,10 @@ export function initWorksAnimation({ gsap, ScrollTrigger }) {
       // 초기 셋업 (첫 번째 아이템을 제외한 모든 요소를 시작 마스크 위치로 배치)
       projectTitles.forEach((title, i) => {
         if (i !== 0) {
-          gsap.set([title, projectContents[i], projectSkills[i]], { yPercent: 100, opacity: 0 });
+          gsap.set([title, projectContents[i], projectSkills[i]], { yPercent: 100, opacity: 0, zIndex: 1 });
           gsap.set(overlays[i], { opacity: 1 });
         } else {
-          gsap.set([title, projectContents[i], projectSkills[i]], { yPercent: 0, opacity: 1 });
+          gsap.set([title, projectContents[i], projectSkills[i]], { yPercent: 0, opacity: 1, zIndex: 10 });
           gsap.set(overlays[i], { opacity: 0 });
         }
       });
@@ -525,3 +525,301 @@ export const initMarqueeAnimation = ({ gsap, ScrollTrigger }) => {
     window.removeEventListener('load', init);
   };
 };
+
+/**
+ * 7. Footer Canvas Matter Animation
+ */
+const coin1 = '/src/assets/images/matter-1.svg';
+const coin2 = '/src/assets/images/matter-2.svg';
+const coin3 = '/src/assets/images/matter-4.svg';
+const coin4 = '/src/assets/images/matter-1.svg';
+const coin5 = '/src/assets/images/matter-2.svg';
+const coin6 = '/src/assets/images/matter-4.svg';
+
+export const initFooterAnimation = ({ gsap, ScrollTrigger }) => {
+  if (typeof window.Matter === 'undefined') {
+    console.warn('Matter.js is not loaded. Please ensure the CDN is included.');
+    return () => {};
+  }
+
+  // Modules
+  let { Engine, Render, Runner, Bodies, Composite, Mouse, MouseConstraint } = window.Matter;
+
+  // Global variables to track the current setup (scoped to this module instance)
+  let currentEngine = null;
+  let currentRender = null;
+  let currentRunner = null;
+  let currentScrollTrigger = null;
+
+  // Mobile resize detection variables
+  let lastWidth = window.innerWidth;
+  let lastHeight = window.innerHeight;
+  let isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  function initFalling2DMatterJS() {
+    const canvas = document.querySelector('#canvas-target');
+
+    // Check if canvas is on page
+    if (!canvas) {
+      return null;
+    }
+    const canvasWidth = canvas.clientWidth + 2;
+    const canvasHeight = canvas.clientHeight + 2;
+    const canvasWallDepth = canvasWidth / 4;
+    const smileyAmount = 15; // Amount of objects added to the canvas
+    const smileySize = canvasWidth / 9; // Size of objects
+    const smileySizeTexture = 256; // Size of object texture in pixels
+    const smileySizeScale = smileySize / smileySizeTexture;
+    const smileyRestitution = 0.75; // Bounciness
+    const worldGravity = 2; // Gravity
+
+    // Create an engine
+    let engine = Engine.create();
+    engine.world.gravity.y = worldGravity;
+
+    // Create a renderer
+    currentRender = Render.create({
+      element: canvas,
+      engine: engine,
+      options: {
+        background: 'transparent',
+        wireframes: false,
+        width: canvasWidth,
+        height: canvasHeight,
+        pixelRatio: 2,
+        border: 'none',
+      },
+    });
+    // Store references globally for cleanup
+    currentEngine = engine;
+
+    // Generate a random number between min (inclusive) and max (exclusive)
+    function getRandomNumber(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+    let min = smileySize / 2; // min value
+    let max = canvasWidth - smileySize / 2; // max value
+
+    // Textures
+    let textureArray = [coin1, coin2, coin3, coin4, coin5, coin6];
+
+    // Function to loop trough all textures
+    let textureIndex = 0;
+    function getNextTexture() {
+      const texture = textureArray[textureIndex];
+      textureIndex = (textureIndex + 1) % textureArray.length;
+      return texture;
+    }
+
+    // Create smiley
+    const smileyCreate = () => {
+      let smiley = Bodies.rectangle(
+        getRandomNumber(min, max),
+        smileySize * -1, // Start off-screen
+        smileySize,
+        smileySize,
+        {
+          chamfer: {
+            radius: smileySize / 2, // makes the rectangle a circle
+          },
+          restitution: smileyRestitution,
+          render: {
+            sprite: {
+              texture: getNextTexture(), // get ordered coin textures
+              xScale: smileySizeScale,
+              yScale: smileySizeScale,
+            },
+          },
+        },
+      );
+      Composite.add(engine.world, smiley);
+    };
+
+    // Create a box with rectangle(x, y, width, height)
+    let boxTop = Bodies.rectangle(
+      canvasWidth / 2 + canvasWallDepth * 2,
+      canvasHeight + canvasWallDepth,
+      canvasWidth + canvasWallDepth * 4,
+      canvasWallDepth * 2,
+      {
+        isStatic: true,
+      },
+    );
+    let boxLeft = Bodies.rectangle(canvasWallDepth * -1, canvasHeight / 2, canvasWallDepth * 2, canvasHeight, {
+      isStatic: true,
+    });
+    let boxRight = Bodies.rectangle(
+      canvasWidth + canvasWallDepth,
+      canvasHeight / 2,
+      canvasWallDepth * 2,
+      canvasHeight,
+      {
+        isStatic: true,
+      },
+    );
+    let boxBottom = Bodies.rectangle(
+      canvasWidth / 2, // Adjusted center alignment for bottom box
+      canvasHeight + canvasWallDepth,
+      canvasWidth + canvasWallDepth * 4,
+      canvasWallDepth * 2,
+      {
+        isStatic: true,
+      },
+    );
+
+    // Add all of the bodies to the world
+    Composite.add(engine.world, [boxTop, boxLeft, boxRight, boxBottom]);
+
+    // Run the renderer
+    Render.run(currentRender);
+    // Create runner
+    currentRunner = Runner.create();
+    // Run the engine
+    Runner.run(currentRunner, engine);
+
+    // Create mouse
+    let mouse = Mouse.create(currentRender.canvas);
+
+    // [핵심] Matter.js가 마우스 휠 이벤트를 감시하지 못하게 제거합니다.
+    mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
+    mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
+
+    let mouseConstraint = MouseConstraint.create(engine, {
+      mouse: mouse,
+      constraint: {
+        stiffness: 0.2,
+        render: {
+          visible: false,
+        },
+      },
+    });
+    Composite.add(engine.world, mouseConstraint);
+
+    // Custom Function to run the generation X amount of times
+    function repeatedFunction(count, maxCount) {
+      if (count < maxCount) {
+        smileyCreate();
+        setTimeout(() => {
+          repeatedFunction(count + 1, maxCount);
+        }, 100);
+      }
+    }
+
+    // Return the function to trigger smiley creation
+    return () => {
+      repeatedFunction(0, 15); // Adjust smileyAmount equivalent here
+    };
+  }
+
+  function cleanupMatterJS() {
+    if (currentEngine) {
+      if (currentRunner) {
+        window.Matter.Runner.stop(currentRunner);
+        currentRunner = null;
+      }
+      if (currentRender) {
+        window.Matter.Render.stop(currentRender);
+        if (currentRender.canvas && currentRender.canvas.parentNode) {
+          currentRender.canvas.parentNode.removeChild(currentRender.canvas);
+        }
+        currentRender = null;
+      }
+      window.Matter.World.clear(currentEngine.world);
+      window.Matter.Engine.clear(currentEngine);
+      currentEngine = null;
+    }
+    if (currentScrollTrigger) {
+      currentScrollTrigger.kill();
+      currentScrollTrigger = null;
+    }
+    if (window.gsap) {
+      window.gsap.killTweensOf('.footer-col-left .footer-mask-target');
+    }
+  }
+
+  function shouldRefreshOnResize() {
+    const currentWidth = window.innerWidth;
+    const currentHeight = window.innerHeight;
+
+    if (isMobile) {
+      const widthChanged = Math.abs(currentWidth - lastWidth) > 50;
+      const significantHeightChange = Math.abs(currentHeight - lastHeight) > 100;
+      lastWidth = currentWidth;
+      lastHeight = currentHeight;
+      return widthChanged || significantHeightChange;
+    } else {
+      const widthChanged = Math.abs(currentWidth - lastWidth) > 20;
+      const heightChanged = Math.abs(currentHeight - lastHeight) > 20;
+      lastWidth = currentWidth;
+      lastHeight = currentHeight;
+      return widthChanged || heightChanged;
+    }
+  }
+
+  let resizeTimeout = null;
+
+  function setupMatterJSWithScrollTrigger() {
+    // If gsap doesn't exist, exit safely
+    if (typeof gsap === 'undefined' || !ScrollTrigger) return;
+    
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      cleanupMatterJS();
+      const triggerSmileys = initFalling2DMatterJS();
+
+      if (triggerSmileys) {
+        currentScrollTrigger = ScrollTrigger.create({
+          trigger: '.footer',
+          start: 'top 60%', // 텍스트 마스킹이 시작되는 타이밍과 정확히 동기화
+          onEnter: () => {
+            triggerSmileys();
+          },
+          once: true,
+        });
+
+        const textElements = document.querySelectorAll('.footer-col-left .footer-mask-target');
+        if (textElements.length > 0) {
+          gsap.fromTo(
+            textElements,
+            { y: '120%' },
+            {
+              y: '0%',
+              duration: 0.8,
+              stagger: 0.5,
+              ease: 'power3.out',
+              scrollTrigger: {
+                trigger: '.footer',
+                start: 'top 60%', // 텍스트 마스킹은 화면에 푸터가 충분히 들어올 때 시작
+                toggleActions: 'play none none reverse', // 다시 위로 스크롤하면 거꾸로 숨어들게 처리
+              },
+            },
+          );
+        }
+      }
+    });
+  }
+  if (document.readyState === 'complete') {
+    setupMatterJSWithScrollTrigger();
+  } else {
+    window.addEventListener('load', setupMatterJSWithScrollTrigger);
+  }
+  const resizeHandler = () => {
+    if (!shouldRefreshOnResize()) return;
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(
+      () => {
+        setupMatterJSWithScrollTrigger();
+        if (ScrollTrigger) ScrollTrigger.refresh();
+      },
+      isMobile ? 500 : 250,
+    );
+  };
+
+  window.addEventListener('resize', resizeHandler);
+
+  return () => {
+    window.removeEventListener('resize', resizeHandler);
+    clearTimeout(resizeTimeout);
+    cleanupMatterJS();
+  };
+};
+

@@ -13,6 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/EasePack.min.js" defer></script>
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js" defer></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@2.0.4/dist/lottie-player.js" defer></script>
     <script type="module" src="/src/main.js"></script>
     <title>포트폴리오 2026</title>
@@ -951,6 +952,12 @@
           </div>
         </div>
 
+        <!-- career -->
+        <section id="career">
+          <div class="container">career</div>
+        </section>
+        <!--// career -->
+
         <!-- marquee -->
         <section class="marquee_cta_wrap">
           <div
@@ -1021,16 +1028,25 @@
         </section>
         <!--// marquee -->
       </main>
-      <footer id="footer" class="footer">
-        <div class="container">footer</div>
+      <footer id="footer" class="footer u-theme-dark">
+        <div class="footer-layout">
+          <div class="footer-col-left">
+            <div class="footer-mask-wrap">
+              <p class="footer-credit u-color-faded footer-mask-target">Site by younhwa</p>
+            </div>
+            <div class="footer-mask-wrap">
+              <h2 class="footer-title footer-mask-target">Closing</h2>
+            </div>
+          </div>
+        </div>
+        <!-- canvas matter -->
+        <div class="canvas-matter">
+          <div id="canvas-target" class="canvas-matter__target"></div>
+        </div>
+        <!--// canvas matter -->
       </footer>
 
-      <button
-        type="button"
-        id="btn-scroll-top"
-        class="floating-btn"
-        aria-label="최상단으로 이동"
-      >
+      <button type="button" id="btn-scroll-top" class="floating-btn" aria-label="최상단으로 이동">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -1041,10 +1057,9 @@
           stroke-width="2"
           stroke-linecap="round"
           stroke-linejoin="round"
-          class="lucide lucide-arrow-up"
-        >
-          <path d="m5 12 7-7 7 7"/>
-          <path d="M12 19V5"/>
+          class="lucide lucide-arrow-up">
+          <path d="m5 12 7-7 7 7" />
+          <path d="M12 19V5" />
         </svg>
       </button>
     </div>
