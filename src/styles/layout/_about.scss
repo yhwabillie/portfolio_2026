@@ -3,7 +3,6 @@
 .about {
   &__scroll-track {
     position: relative;
-    background-color: var(--color-bg);
   }
 
   &__sticky-wrap {
@@ -111,7 +110,7 @@
     border-radius: rem-calc(1000px);
     backdrop-filter: blur(10px);
 
-    @include mq(tablet-s) {
+    @include mq(tablet-lp) {
       border-color: #111;
     }
   }
@@ -125,15 +124,7 @@
   &__section-title {
     display: none;
     line-height: 1.1;
-    letter-spacing: rem-calc(-2px);
     color: #111;
-  }
-
-  &__section-sub {
-    font-size: fluid(14px, 18px);
-    margin: rem-calc(12px) 0 rem-calc(24px);
-    text-align: center;
-    display: none;
   }
 
   // 모바일 및 태블릿 퍼포먼스 대응 (데스크톱 외 애니메이션 미적용 후 자연스러운 구조화)
@@ -144,16 +135,17 @@
 
     &__section-title {
       display: block;
-      font-size: fluid(40px, 60px);
-      font-weight: 600;
+      font-size: fluid(42px, 80px);
+      // font-size: fluid(40px, 60px);
+      font-weight: 700;
       position: relative;
       z-index: 1;
       text-align: center;
+      margin-bottom: rem-calc(20px);
     }
 
     &__section-sub {
       display: block;
-      margin-bottom: fluid(60px, 100px);
     }
 
     &__scroll-track {
@@ -166,7 +158,7 @@
       overflow: visible;
       display: flex;
       flex-direction: column;
-      gap: fluid(60px, 100px);
+      gap: fluid(20px, 100px);
     }
 
     &__content {
@@ -244,7 +236,7 @@
     justify-content: center;
     align-items: center;
     gap: fluid(8px, 20px);
-    margin: auto auto fluid(20px, 40px) auto;
+    margin: 0 auto 0 auto;
     width: fit-content;
     background-size: 0% 100%;
     background-repeat: no-repeat;
@@ -254,7 +246,8 @@
     mix-blend-mode: difference;
 
     @include mq(tablet-lp) {
-      margin-bottom: fluid(60px, 100px);
+      margin-bottom: rem-calc(20px);
+      gap: 0;
     }
   }
 
@@ -270,11 +263,6 @@
     em {
       display: inline-block;
       font-style: normal;
-    }
-
-    @include mq(tablet-lp) {
-      font-size: fluid(32px, 48px);
-      padding: 0 fluid(16px, 24px);
     }
   }
 
@@ -319,12 +307,12 @@
     gap: fluid(10px, 20px);
     background-color: #111;
     color: #fff;
-    padding: fluid(20px, 100px) fluid(20px, 100px);
+    padding: fluid(20px, 80px) fluid(20px, 80px);
     position: relative;
     z-index: 10;
     margin-left: rem-calc(-200px);
     border-radius: rem-calc(30px);
-    margin-top: rem-calc(-100px);
+    margin-top: rem-calc(100px);
 
     @include mq(pc-s) {
       grid-column: span 4;
@@ -341,10 +329,10 @@
     }
 
     p {
-      font-size: fluid(14px, 20px);
+      font-size: fluid(14px, 18px);
       line-height: 2;
       font-weight: 400;
-      opacity: 0.9;
+      color: rgba(255, 255, 255, 1);
     }
   }
 
@@ -356,11 +344,11 @@
     background-size: 0% 100%;
     background-repeat: no-repeat;
     background-position: 0 100%;
-    color: #000;
+    color: #111;
 
     @include mq(tablet-lp) {
       background: linear-gradient(transparent 0%, rgb(252, 242, 164) 0%);
-      background-size: 100% 100%;
+      background-size: 100% 100% !important;
     }
   }
 
