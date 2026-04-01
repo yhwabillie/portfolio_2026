@@ -698,12 +698,12 @@ export function initCareerAnimation({ gsap, ScrollTrigger }) {
 /**
  * 8. Footer Canvas Matter Animation
  */
-const coin1 = '/src/assets/images/matter-1.svg';
-const coin2 = '/src/assets/images/matter-2.svg';
-const coin3 = '/src/assets/images/matter-3.svg';
-const coin4 = '/src/assets/images/matter-4.svg';
-const coin5 = '/src/assets/images/matter-5.svg';
-const coin6 = '/src/assets/images/matter-6.svg';
+import coin1 from './assets/images/matter-1.svg';
+import coin2 from './assets/images/matter-2.svg';
+import coin3 from './assets/images/matter-3.svg';
+import coin4 from './assets/images/matter-4.svg';
+import coin5 from './assets/images/matter-5.svg';
+import coin6 from './assets/images/matter-6.svg';
 
 export const initFooterAnimation = ({ gsap, ScrollTrigger }) => {
   if (typeof window.Matter === 'undefined') {
