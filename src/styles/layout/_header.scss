@@ -8,13 +8,61 @@
   z-index: 1000;
   padding: rem-calc(30px) 0 rem-calc(30px);
   border-bottom: rem-calc(1px) solid var(--border-color);
-  transition: all 0.3s ease-in-out;
+  transition: padding 0.3s ease-in-out, transform 0.3s ease-in-out;
   background-color: transparent;
 
   &.is-scrolled {
     padding: rem-calc(15px) 0;
-    // background-color: color-mix(in srgb, transparent 80%, transparent);
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(15px);
+    background-color: rgba(255, 255, 255, 0.05); // 아주 투명하게 배경 추가
+  }
+
+  // 다크 배리에이션 (어두운 섹션 통과 시 활성화)
+  &.is-dark {
+    color: var(--white);
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+
+    .header__logo-sub {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .header__logo img {
+      filter: invert(1); // 로고 반전
+    }
+
+    .btn {
+      border-color: rgba(255, 255, 255, 0.2);
+      background-color: rgba(255, 255, 255, 0.1);
+      
+      &__label {
+        color: var(--white) !important;
+      }
+
+      &__icon, svg {
+        color: var(--white) !important;
+        stroke: var(--white) !important;
+      }
+
+      &:hover {
+        background-color: var(--white);
+        .btn__label {
+          color: var(--black) !important;
+        }
+        .btn__icon, svg {
+          color: var(--black) !important;
+          stroke: var(--black) !important;
+        }
+      }
+    }
+
+    .icon-btn {
+       background-color: rgba(255, 255, 255, 0.1);
+       
+       .btn__icon, svg {
+         color: var(--white) !important;
+         stroke: var(--white) !important;
+       }
+    }
   }
 
   @include mq(tablet-ls) {

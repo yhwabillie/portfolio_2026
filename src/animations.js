@@ -12,6 +12,54 @@ export const setupGsapDefaults = (gsap) => {
   });
 };
 
+export function initHeaderTheme({ gsap, ScrollTrigger }) {
+  if (!gsap || !ScrollTrigger) return () => {};
+
+  const header = document.querySelector('.header');
+  if (!header) return () => {};
+
+  // 모든 주요 섹션을 감시하여 테마 전환을 동기화
+  const allSections = document.querySelectorAll('section, .about-main, .works, footer');
+  
+  allSections.forEach((section) => {
+    const isDark = section.getAttribute('data-header-theme') === 'dark' || section.classList.contains('u-theme-dark');
+    const sectionName = section.id || section.className || 'section';
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: 'bottom top',
+      onEnter: () => {
+        if (isDark) {
+          header.classList.add('is-dark');
+          // console.log(`[HeaderTheme] Entered DARK: ${sectionName}`);
+        } else {
+          header.classList.remove('is-dark');
+          if (section.id === 'works') {
+            console.log('[HeaderTheme] Entered #works - Browser Top hit Works Top (Switching to LIGHT)');
+          }
+        }
+      },
+      onEnterBack: () => {
+        if (isDark) {
+          header.classList.add('is-dark');
+        } else {
+          header.classList.remove('is-dark');
+        }
+      },
+      onRefresh: (self) => {
+        if (self.isActive) {
+          header.classList.toggle('is-dark', isDark);
+        }
+      }
+    });
+  });
+
+  return () => {
+    header.classList.remove('is-dark');
+  };
+}
+
 export function initHeaderReveal({ gsap, ScrollTrigger }) {
   if (!gsap || !ScrollTrigger) return () => {};
 
@@ -679,9 +727,10 @@ export const initFooterAnimation = ({ gsap, ScrollTrigger }) => {
 
   function initFalling2DMatterJS() {
     const canvas = document.querySelector('#canvas-target');
+    const element = document.querySelector('.footer');
 
     // Check if canvas is on page
-    if (!canvas) {
+    if (!canvas || !element) {
       return null;
     }
     const canvasWidth = canvas.clientWidth + 2;
@@ -798,12 +847,15 @@ export const initFooterAnimation = ({ gsap, ScrollTrigger }) => {
     // Run the engine
     Runner.run(currentRunner, engine);
 
-    // Create mouse
-    let mouse = Mouse.create(currentRender.canvas);
+    // Create mouse on the footer element itself so it can capture events through overlays
+    let mouse = Mouse.create(element);
+    mouse.pixelRatio = window.devicePixelRatio || 1;
 
     // [핵심] Matter.js가 마우스 휠 이벤트를 감시하지 못하게 제거합니다.
-    mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
-    mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
+    if (mouse.mousewheel) {
+      mouse.element.removeEventListener('mousewheel', mouse.mousewheel);
+      mouse.element.removeEventListener('DOMMouseScroll', mouse.mousewheel);
+    }
 
     let mouseConstraint = MouseConstraint.create(engine, {
       mouse: mouse,

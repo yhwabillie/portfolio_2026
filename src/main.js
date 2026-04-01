@@ -1,5 +1,5 @@
 // src/main.js
-import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initCareerAnimation, initMarqueeAnimation, initFooterAnimation, setupGsapDefaults } from './animations.js';
+import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initCareerAnimation, initMarqueeAnimation, initFooterAnimation, initHeaderTheme, setupGsapDefaults } from './animations.js';
 
 /**
  * 1. Lenis 초기화 (Smooth Scroll)
@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 4. Hero 애니메이션 최적화 모듈 호출
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-    console.log('[Main] Registering animations...');
+    // console.log('[Main] Registering animations...');
     // ScrollTrigger 플러그인 등록 (필수)
     gsap.registerPlugin(ScrollTrigger);
 
@@ -276,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Header Reveal 초기화 (변경된 페이지 길이를 감지하여 정확한 위치 계산)
     initHeaderReveal({ gsap, ScrollTrigger });
+    initHeaderTheme({ gsap, ScrollTrigger });
 
     // Works 섹션 애니메이션
     initWorksAnimation({ gsap, ScrollTrigger });
@@ -285,18 +286,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Marquee CTA 애니메이션 (try-catch로 보호하여 단독 실행 보장)
     try {
-      console.log('[Main] Calling initMarqueeAnimation...');
+      // console.log('[Main] Calling initMarqueeAnimation...');
       initMarqueeAnimation({ gsap, ScrollTrigger });
-      console.log('[Main] initMarqueeAnimation finished.');
+      // console.log('[Main] initMarqueeAnimation finished.');
     } catch (e) {
       console.error('[Main] initMarqueeAnimation failed to execute:', e);
     }
 
     // 8. Footer 애니메이션 (Matter.js + GSAP)
     try {
-      console.log('[Main] Calling initFooterAnimation...');
+      // console.log('[Main] Calling initFooterAnimation...');
       initFooterAnimation({ gsap, ScrollTrigger });
-      console.log('[Main] initFooterAnimation finished.');
+      // console.log('[Main] initFooterAnimation finished.');
     } catch (e) {
       console.error('[Main] initFooterAnimation failed to execute:', e);
     }
@@ -304,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 약간의 지연을 주어 모든 레이아웃 계산이 완료된 후 정확하게 측정합니다.
     setTimeout(() => {
       ScrollTrigger.refresh();
-      console.log('[Main] Final ScrollTrigger refresh completed.');
+      // console.log('[Main] Final ScrollTrigger refresh completed.');
     }, 100);
   }
 });
