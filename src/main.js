@@ -1,5 +1,5 @@
 // src/main.js
-import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initMarqueeAnimation, initFooterAnimation, setupGsapDefaults } from './animations.js';
+import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initCareerAnimation, initMarqueeAnimation, initFooterAnimation, setupGsapDefaults } from './animations.js';
 
 /**
  * 1. Lenis 초기화 (Smooth Scroll)
@@ -280,6 +280,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Works 섹션 애니메이션
     initWorksAnimation({ gsap, ScrollTrigger });
 
+    // Career 섹션 애니메이션
+    initCareerAnimation({ gsap, ScrollTrigger });
+
     // Marquee CTA 애니메이션 (try-catch로 보호하여 단독 실행 보장)
     try {
       console.log('[Main] Calling initMarqueeAnimation...');
@@ -297,5 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (e) {
       console.error('[Main] initFooterAnimation failed to execute:', e);
     }
+    // 9. 최종 위치 갱신 (모든 섹션의 Pinning 및 높이 변화 반영)
+    // 약간의 지연을 주어 모든 레이아웃 계산이 완료된 후 정확하게 측정합니다.
+    setTimeout(() => {
+      ScrollTrigger.refresh();
+      console.log('[Main] Final ScrollTrigger refresh completed.');
+    }, 100);
   }
 });

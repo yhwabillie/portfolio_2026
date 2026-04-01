@@ -6,7 +6,7 @@ export const setupGsapDefaults = (gsap) => {
   gsap.config({
     force3D: true, // 하드웨어 가속 강제
   });
-  
+
   gsap.defaults({
     ease: "none", // 스크롤 직결 애니메이션은 none이 부드러움
   });
@@ -348,13 +348,13 @@ export function initWorksAnimation({ gsap, ScrollTrigger }) {
                 const rect = item.getBoundingClientRect();
                 // 절대 좌표계에서의 요소 중앙 Y값
                 const itemCenterV = rect.top + scrollPos + rect.height / 2;
-                
+
                 // 해당 요소의 중앙을 화면 중앙에 맞추기 위해 필요한 스크롤 Y 목표값
                 const targetScrollY = itemCenterV - window.innerHeight / 2;
-                
+
                 // 현재 스크롤 위치와 목표 위치까지의 픽셀 거리 계산
                 const distance = Math.abs(targetScrollY - scrollPos);
-                
+
                 if (distance < minDistance) {
                   minDistance = distance;
                   targetProgress = (targetScrollY - self.start) / (self.end - self.start);
@@ -477,9 +477,9 @@ export const initMarqueeAnimation = ({ gsap, ScrollTrigger }) => {
             const directionString = currentDirection === 1 ? 'right' : 'left';
 
             // [증명용 로그] 스크롤 방향과 계산된 마키 흐름 배율을 콘솔에 찍습니다.
-            console.log(
-              `[Marquee 상태] 스크롤 방향: ${self.direction > 0 ? '내림(Down) 👇' : '올림(Up) 👆'} | 마키 흐름: ${directionString.toUpperCase()} ➡️ | 속도 배율: ${(currentDirection * (1 + velocityScale)).toFixed(2)}배`,
-            );
+            // console.log(
+            //   `[Marquee 상태] 스크롤 방향: ${self.direction > 0 ? '내림(Down) 👇' : '올림(Up) 👆'} | 마키 흐름: ${directionString.toUpperCase()} ➡️ | 속도 배율: ${(currentDirection * (1 + velocityScale)).toFixed(2)}배`,
+            // );
 
             // 스크롤 중일 때 방향과 증폭된 속도를 즉각 적용
             gsap.to(animation, {
@@ -494,9 +494,6 @@ export const initMarqueeAnimation = ({ gsap, ScrollTrigger }) => {
             // 스크롤이 끝나는 찰나 마지막 방향을 유지하며 속도만 1배속으로 감속 복구
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
-              console.log(
-                `[Marquee 감속 처리] 스크롤 멈춤 감지 ✋ -> 현재 방향(${directionString.toUpperCase()}) 유지, 1배속으로 안정화`,
-              );
               gsap.to(animation, {
                 timeScale: currentDirection,
                 duration: 0.6,
@@ -514,7 +511,7 @@ export const initMarqueeAnimation = ({ gsap, ScrollTrigger }) => {
             trigger: marquee,
             start: '0% 100%',
             end: '100% 0%',
-            scrub: 0.5, // 슬라이드의 떨림 현상 방지를 위해 0에서 0.5로 개선
+            scrub: 0.5,
           },
         });
 
@@ -540,7 +537,118 @@ export const initMarqueeAnimation = ({ gsap, ScrollTrigger }) => {
 };
 
 /**
- * 7. Footer Canvas Matter Animation
+ * 7. Career Section Animation
+ */
+export function initCareerAnimation({ gsap, ScrollTrigger }) {
+  if (!gsap || !ScrollTrigger) return () => {};
+
+  const mm = gsap.matchMedia();
+
+  // Desktop Only: 1280px 이상에서만 가동
+  mm.add('(min-width: 1280px)', () => {
+    // 1. Progress Bar
+    const progressTl = gsap.to('.career__progress-bar', {
+      scaleY: 1,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.career__content',
+        start: 'top 150px',
+        end: 'bottom bottom',
+        scrub: true,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    // 2. Perspective Reveal
+    const careerItems = gsap.utils.toArray('.career__item');
+    let revealTl = null;
+    
+    if (careerItems.length > 0) {
+      revealTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '.career',
+          start: 'top 85%',
+          end: 'bottom bottom',
+          scrub: 1.2,
+          invalidateOnRefresh: true,
+          refreshPriority: -1,
+        }
+      })
+      .fromTo(careerItems, 
+        { 
+          opacity: 0, 
+          y: 150,
+          rotationX: -25,
+          transformPerspective: 1200,
+          immediateRender: true,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          rotationX: 0,
+          stagger: 0.3,
+          ease: 'power2.out',
+        }
+      );
+    }
+
+    // 3. Parallax Background & Depth of Field
+    const bgTl = gsap.to('.career__bg-img', {
+      y: '30%', // 가동 범위 대폭 확대 (깊이감 극대화)
+      scale: 1.1, // 스크롤 시 살짝 커지면서 입체감 부여
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '.career',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      }
+    });
+
+    // 4. Velocity-based Skew
+    let proxy = { skew: 0 };
+    let skewSetter = gsap.quickSetter('.career__item', "skewY", "deg");
+    let clamp = gsap.utils.clamp(-12, 12); 
+
+    const skewTrigger = ScrollTrigger.create({
+      trigger: '.career',
+      start: 'top bottom',
+      end: 'bottom top',
+      onUpdate: (self) => {
+        let skew = clamp(self.getVelocity() / -400);
+        if (Math.abs(skew) > Math.abs(proxy.skew)) {
+          proxy.skew = skew;
+          gsap.to(proxy, {
+            skew: 0,
+            duration: 0.6,
+            ease: "power3",
+            overwrite: true,
+            onUpdate: () => skewSetter(proxy.skew)
+          });
+        }
+      }
+    });
+
+    return () => {
+      progressTl?.kill();
+      revealTl?.kill();
+      bgTl?.kill();
+      skewTrigger?.kill();
+      gsap.set('.career__item', { clearProps: "all" });
+      gsap.set('.career__progress-bar', { clearProps: "all" });
+    };
+  });
+
+  const finalRefresh = () => ScrollTrigger.refresh();
+  window.addEventListener('load', finalRefresh);
+
+  return () => {
+    mm.revert();
+    window.removeEventListener('load', finalRefresh);
+  };
+}
+/**
+ * 8. Footer Canvas Matter Animation
  */
 const coin1 = '/src/assets/images/matter-1.svg';
 const coin2 = '/src/assets/images/matter-2.svg';
@@ -774,7 +882,7 @@ export const initFooterAnimation = ({ gsap, ScrollTrigger }) => {
   function setupMatterJSWithScrollTrigger() {
     // If gsap doesn't exist, exit safely
     if (typeof gsap === 'undefined' || !ScrollTrigger) return;
-    
+
     gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
       cleanupMatterJS();
       const triggerSmileys = initFalling2DMatterJS();

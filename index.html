@@ -46,10 +46,10 @@
                   <a href="#about-main" class="btn"><span class="btn__label">About</span></a>
                 </li>
                 <li class="header__nav-list-item">
-                  <a href="#career" class="btn"><span class="btn__label">Career</span></a>
+                  <a href="#works" class="btn"><span class="btn__label">Works</span></a>
                 </li>
                 <li class="header__nav-list-item">
-                  <a href="#works" class="btn"><span class="btn__label">Works</span></a>
+                  <a href="#career" class="btn"><span class="btn__label">Career</span></a>
                 </li>
               </ul>
             </nav>
@@ -105,27 +105,6 @@
                 <path d="M18 6 6 18" />
                 <path d="m6 6 12 12" />
               </svg>
-              <!-- <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="icon-btn__icon lucide lucide-sun-icon lucide-sun">
-                <circle cx="12" cy="12" r="4" />
-                <path d="M12 2v2" />
-                <path d="M12 20v2" />
-                <path d="m4.93 4.93 1.41 1.41" />
-                <path d="m17.66 17.66 1.41 1.41" />
-                <path d="M2 12h2" />
-                <path d="M20 12h2" />
-                <path d="m6.34 17.66-1.41 1.41" />
-                <path d="m19.07 4.93-1.41 1.41" />
-              </svg> -->
             </button>
           </div>
           <ul data-mobile-menu-nav-list class="side-menu__nav-list">
@@ -133,10 +112,10 @@
               <a href="#about-main">About</a>
             </li>
             <li data-mobile-menu-nav-item class="side-menu__nav-list-item">
-              <a href="#career">Career</a>
+              <a href="#works">Works</a>
             </li>
             <li data-mobile-menu-nav-item class="side-menu__nav-list-item">
-              <a href="#works">Works</a>
+              <a href="#career">Career</a>
             </li>
           </ul>
         </nav>
@@ -953,8 +932,106 @@
         </div>
 
         <!-- career -->
-        <section id="career">
-          <div class="container">career</div>
+        <section id="career" class="career">
+          <div class="career__bg">
+            <div class="career__bg-img"></div>
+            <div class="career__bg-overlay"></div>
+          </div>
+          <div class="career__sticky-wrap">
+            <div class="container career__container">
+              <div class="career__layout">
+                <!-- Left: Section Title -->
+                <div class="career__title-area">
+                  <h2 class="career__title u-text-style-display">Career</h2>
+                  <div class="career__progress-wrap">
+                    <div class="career__progress-line">
+                      <div class="career__progress-bar"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right: Career List -->
+                <div class="career__content">
+                  <div class="career__list">
+                    <!-- 01. Bubblecone -->
+                    <div class="career__item" data-career-item>
+                      <div class="career__item-header">
+                        <span class="career__item-period">2024. 10 — 2026. 01 (1년 4개월)</span>
+                        <h3 class="career__item-company">주식회사 버블콘</h3>
+                        <p class="career__item-position">서비스운영팀 / 대리 (팀원)</p>
+                      </div>
+                      <div class="career__item-body">
+                        <ul class="career__item-details">
+                          <li>광주교육청, NIA 수주 공공기관 프로젝트 UI 설계 및 웹 퍼블리싱 수행</li>
+                          <li>KIRD 납품 H5P 기반 자사 솔루션(1gram) 저작도구 UI 유지보수 및 기능 고도화</li>
+                          <li>
+                            자사 솔루션 stlink(학적사항 통합 관리 서비스) Google PoC 등 각종 시연용 핵심 기능 UI 구현
+                          </li>
+                          <li>수주 프로젝트 감리 대응을 위한 웹 접근성(WCAG 2.2 AA) 기준 점검 및 개선</li>
+                          <li>웹 접근성을 준수하는 공통 컴포넌트 기반 UI 시스템 가이드 수립 및 표준화 관리</li>
+                          <li>Chart.js 및 ApexCharts 커스터마이징을 통한 데이터 시각화 구현</li>
+                        </ul>
+                        <div class="career__item-tags">
+                          <span class="career__tag">웹 접근성 (WCAG 2.2)</span>
+                          <span class="career__tag">UI 디자인 시스템</span>
+                          <span class="career__tag">데이터 시각화</span>
+                          <span class="career__tag">Interface Engineering</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 02. GeneStoryKorea -->
+                    <div class="career__item" data-career-item>
+                      <div class="career__item-header">
+                        <span class="career__item-period">2023. 08 — 2024. 05 (10개월)</span>
+                        <h3 class="career__item-company">진스토리코리아주식회사</h3>
+                        <p class="career__item-position">개발팀 / 사원 (팀원)</p>
+                      </div>
+                      <div class="career__item-body">
+                        <ul class="career__item-details">
+                          <li>서비스 전반의 화면 구조 설계 및 재사용 가능한 공통 컴포넌트 개발</li>
+                          <li>Framer Motion 기반 인터랙티브 UI 구현 및 애니메이션 최적화</li>
+                          <li>react-hook-form 기반 유효성 검증 체계 구축 및 응답 누락 방지 로직 구현</li>
+                          <li>ApexCharts, Chart.js 커스터마이징을 통한 심리검사 결과 리포트 시각화 구현</li>
+                          <li>next-sitemap 기반 SEO 자동화 체계 구축 및 검색 엔진 최적화(SEO)</li>
+                        </ul>
+                        <div class="career__item-tags">
+                          <span class="career__tag">Component Architecture</span>
+                          <span class="career__tag">Interactive UI</span>
+                          <span class="career__tag">검색엔진 최적화 (SEO)</span>
+                          <span class="career__tag">애니메이션 최적화</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- 03. Enable Daonsot -->
+                    <div class="career__item" data-career-item>
+                      <div class="career__item-header">
+                        <span class="career__item-period">2021. 09 — 2023. 03 (1년 7개월)</span>
+                        <h3 class="career__item-company">주식회사 인에이블다온소프트</h3>
+                        <p class="career__item-position">IT 개발팀 / 사원 (팀원)</p>
+                      </div>
+                      <div class="career__item-body">
+                        <ul class="career__item-details">
+                          <li>자사 하이브리드 웹앱 및 PC 서비스 `더캠프(The Camp)` UI 신규 개발 및 유지보수</li>
+                          <li>백오피스 시스템 및 카페24 기반 자사 쇼핑몰 스킨 고도화 및 커스터마이징</li>
+                          <li>기획 요구사항 분석을 통한 UI 상세 설계 및 프로토타입 제작</li>
+                          <li>미디어 쿼리(Media Query)를 활용한 반응형 레이아웃 구현 및 멀티 디바이스 대응</li>
+                          <li>브라우저 엔진별 렌더링 차이를 고려한 크로스 브라우징 검증 및 UI 안정성 확보</li>
+                        </ul>
+                        <div class="career__item-tags">
+                          <span class="career__tag">하이브리드 웹앱</span>
+                          <span class="career__tag">크로스 브라우징</span>
+                          <span class="career__tag">B2C 서비스 운영</span>
+                          <span class="career__tag">UI Prototyping</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
         <!--// career -->
 

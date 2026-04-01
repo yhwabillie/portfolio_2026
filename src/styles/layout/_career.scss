@@ -1,2 +1,222 @@
+@use '../utils' as *;
+
 .career {
+  padding: fluid(80px, 200px) 0;
+  position: relative;
+  background-color: var(--bg-primary);
+  // overflow: hidden; // 이 줄이 있으면 자식의 sticky가 작동하지 않으므로 제거
+
+  &__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden; // Parallax 이미지만 여기서 Clip 처리하여 부모의 sticky를 방해하지 않음
+
+    &-img {
+      position: absolute;
+      top: -30%;
+      left: -5%;
+      width: 110%;
+      height: 160%;
+      background-image: url('/src/assets/images/career-bg.png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.12;
+      filter: grayscale(100%) brightness(1) blur(2px); // 흐릿하게(Blur) 처리하여 시각적인 깊이감(Depth of Field) 확보
+
+      [data-theme="dark"] & {
+        opacity: 0.18;
+      }
+    }
+
+    &-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        var(--bg-primary) 0%,
+        transparent 20%,
+        transparent 80%,
+        var(--bg-primary) 100%
+      );
+    }
+  }
+
+  &__layout {
+    @include container-grid;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__title-area {
+    grid-column: span 4;
+    position: sticky;
+    top: 15vh; // 화면 높이의 15% 지점에 고정 (헤더 공간 확보 및 가독성 최적화)
+    display: flex;
+    flex-direction: column;
+    gap: rem-calc(20px);
+    height: fit-content; // sticky가 작동하기 위해 자신의 높이를 고정하지 않음
+
+    @include mq(laptop-l) {
+      grid-column: span 12;
+      position: relative;
+      top: 0;
+      text-align: center;
+      margin-bottom: fluid(40px, 80px);
+    }
+  }
+
+  &__title {
+    font-size: fluid(42px, 80px);
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-primary);
+  }
+
+  &__progress-wrap {
+    width: rem-calc(2px);
+    height: rem-calc(300px);
+    background-color: var(--text-muted); // 트랙 배경을 연하게 설정하여 진행 표시가 보이도록 개선
+    margin-top: rem-calc(40px);
+    position: relative;
+    overflow: hidden;
+
+    @include mq(laptop-l) {
+      display: none;
+    }
+  }
+
+  &__progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--text-primary);
+    transform-origin: top;
+    transform: scaleY(0);
+  }
+
+  &__content {
+    grid-column: span 8;
+
+    @include mq(laptop-l) {
+      grid-column: span 12;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: fluid(40px, 100px);
+  }
+
+  &__item {
+    padding: fluid(30px, 60px);
+    border: rem-calc(1px) solid var(--border-color);
+    border-radius: rem-calc(30px);
+    background-color: var(--bg-primary);
+    position: relative;
+    overflow: visible; // Skew/Rotation requires overflow: visible for edges
+    opacity: 1;
+    transform: none;
+    transform-style: preserve-3d; // 3D 효과 지원
+    backface-visibility: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); // 공중에 떠 있는 느낌을 위한 부드러운 그림자
+    transition: box-shadow 0.3s ease;
+
+    [data-theme="dark"] & {
+      background-color: rgba(34, 34, 34, 0.7); // 배경보다 살짝 밝은 톤으로 들뜸 효과(Elevation)
+      backdrop-filter: blur(12px); // 글래스모피즘 효과로 배경 이미지와 분리
+      border-color: rgba(255, 255, 255, 0.1); // 가독성을 위한 은은한 경계선
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); // 더 깊은 그림자
+    }
+
+    &-header {
+      margin-bottom: rem-calc(20px);
+    }
+
+    &-period {
+      display: block;
+      font-size: fluid(12px, 16px);
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin-bottom: rem-calc(10px);
+    }
+
+    &-company {
+      font-size: fluid(20px, 32px);
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: rem-calc(40px);
+    }
+
+    &-position {
+      font-size: fluid(14px, 18px);
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    &-body {
+      display: flex;
+      flex-direction: column;
+      gap: rem-calc(30px);
+    }
+
+    &-details {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: rem-calc(12px);
+
+      li {
+        font-size: fluid(14px, 17px);
+        line-height: 1.6;
+        color: var(--text-primary);
+        position: relative;
+        padding-left: rem-calc(18px);
+
+        &::before {
+          content: '';
+          position: absolute;
+          left: 0;
+          top: 0.6em;
+          width: rem-calc(6px);
+          height: rem-calc(6px);
+          border-radius: 50%;
+          background-color: var(--text-primary);
+          opacity: 0.3;
+        }
+      }
+    }
+
+    &-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: rem-calc(8px);
+    }
+    @include mq(tablet-lp) {
+      padding: rem-calc(24px);
+      border-radius: rem-calc(24px);
+    }
+  }
+
+  &__tag {
+    font-size: rem-calc(14px);
+    font-weight: 500;
+    color: var(--text-primary);
+    padding: rem-calc(8px) rem-calc(18px);
+    border: rem-calc(1px) solid var(--border-color);
+    border-radius: 1000px;
+    background-color: var(--bg-secondary);
+  }
 }
