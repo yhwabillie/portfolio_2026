@@ -341,14 +341,15 @@
     display: inline;
     color: inherit;
     font-weight: 600;
-    background: linear-gradient(transparent 0%, rgb(252, 242, 164) 0%);
+    // 빌드 시 그라데이션 오작동 방지를 위해 단색 선언으로 변경
+    background: linear-gradient(rgb(252, 242, 164), rgb(252, 242, 164));
     background-size: 0% 100%;
     background-repeat: no-repeat;
-    background-position: 0 100%;
+    background-position: left bottom; // 왼쪽에서 채워지도록 명시
     color: #111;
 
     @include mq(tablet-lp) {
-      background: linear-gradient(transparent 0%, rgb(252, 242, 164) 0%);
+      background: linear-gradient(rgb(252, 242, 164), rgb(252, 242, 164));
       background-size: 100% 100% !important;
     }
   }

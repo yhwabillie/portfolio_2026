@@ -192,10 +192,17 @@ const initTheme = () => {
   const themeBtn = document.querySelector('[data-theme-change]');
   if (!themeBtn) return;
 
-  // 로컬 스토리지에서 테마 확인
-  let currentTheme = localStorage.getItem('theme') || 'light';
+  // 1. 로컬 스토리지 확인
+  // 2. 스토리지에 없으면 시스템 설정 확인
+  const savedTheme = localStorage.getItem('theme');
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
   if (currentTheme === 'dark') {
     document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
   }
 
   // 아이콘 토글 함수 (문/선)

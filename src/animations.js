@@ -36,7 +36,7 @@ export function initHeaderTheme({ gsap, ScrollTrigger }) {
         } else {
           header.classList.remove('is-dark');
           if (section.id === 'works') {
-            console.log('[HeaderTheme] Entered #works - Browser Top hit Works Top (Switching to LIGHT)');
+            // console.log('[HeaderTheme] Entered #works - Browser Top hit Works Top (Switching to LIGHT)');
           }
         }
       },
