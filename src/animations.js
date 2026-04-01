@@ -214,7 +214,7 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
         scrollTrigger: {
           trigger: '.about-main',
           start: 'top top',
-          end: '+=100%',
+          end: '+=150%',
           scrub: 1,
           pin: true,
           pinSpacing: true,
@@ -224,6 +224,10 @@ export function initAboutMainAnimation({ gsap, ScrollTrigger }) {
       gsap.utils.toArray('.about-main__accent').forEach((accent) => {
         accentTl.to(accent, { backgroundSize: '100% 100%', ease: 'none' });
       });
+
+      // scrub: 1 로 인한 시각적 지연을 보완하기 위해 타임라인 마지막에 빈 대기 시간을 추가
+      // 이 구간 동안 사용자는 스크롤을 더 내려야 핀이 풀리므로, 애니메이션이 완전히 끝날 수 있는 여유를 줍니다.
+      accentTl.to({}, { duration: 1 });
     });
   };
 

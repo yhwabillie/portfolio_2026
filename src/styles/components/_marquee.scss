@@ -2,9 +2,14 @@
 @use '../utils' as *;
 
 .marquee_cta {
+  &_component {
+    background-color: #111;
+  }
+
   &_list {
     display: flex;
     white-space: nowrap;
+    background-color: #111; /* Fix for white lines between items caused by sub-pixel rendering */
   }
 
   &_item {

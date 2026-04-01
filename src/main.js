@@ -126,16 +126,18 @@ const initMobileMenu = () => {
         const targetId = link.getAttribute('href');
         if (targetId && targetId !== '#') {
           e.preventDefault();
+          
           closeMenu();
+          
+          // lenis가 stop() 상태이면 scrollTo가 작동하지 않거나 지연되므로 즉시 start() 호출
+          if (lenis) lenis.start();
 
-          // 애니메이션 종료 후 스크롤 이동을 위한 타이밍 지연
-          setTimeout(() => {
-            if (lenis) {
-              lenis.scrollTo(targetId, { duration: 1.2 });
-            } else {
-              document.querySelector(targetId)?.scrollIntoView({ behavior: 'smooth' });
-            }
-          }, 600);
+          if (lenis) {
+            lenis.scrollTo(targetId, { duration: 1.2 });
+          } else {
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
         }
       });
     });
@@ -148,6 +150,29 @@ const initMobileMenu = () => {
     // 리사이즈 시 메뉴 닫기 (데스크탑 전환 시 대비)
     window.addEventListener('resize', () => {
       if (window.innerWidth > 1024 && isActive) closeMenu();
+    });
+  });
+};
+
+/**
+ * 3. 데스크탑 헤더 네비게이션 스크롤 이동
+ */
+const initHeaderNav = () => {
+  const headerLinks = document.querySelectorAll('.header__nav-list-item a[href^="#"]');
+  headerLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      const targetId = link.getAttribute('href');
+      if (targetId && targetId !== '#') {
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          e.preventDefault();
+          if (lenis) {
+            lenis.scrollTo(targetElement, { duration: 1.2 });
+          } else {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }
     });
   });
 };
@@ -178,10 +203,11 @@ const initFloatingButton = () => {
   });
 };
 
-// 4. 페이지 로드 시 실행
+// 5. 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', () => {
   initLenis();
   initMobileMenu();
+  initHeaderNav();
   initFloatingButton();
 
   // 4. Hero 애니메이션 최적화 모듈 호출
