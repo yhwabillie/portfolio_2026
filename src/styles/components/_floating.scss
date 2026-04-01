@@ -1,0 +1,49 @@
+@use "../utils" as *;
+
+.floating-btn {
+  position: fixed;
+  bottom: rem-calc(30px);
+  right: rem-calc(30px);
+  width: fluid(44px, 56px);
+  height: fluid(44px, 56px);
+  border-radius: 50%;
+  background-color: #111;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 rem-calc(8px) rem-calc(20px) rgba(0, 0, 0, 0.15);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(rem-calc(20px));
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease,
+    transform 0.4s cubic-bezier(0.2, 0, 0, 1),
+    background-color 0.3s ease;
+
+  &:hover {
+    background-color: #555;
+    transform: translateY(0) scale(1.05);
+  }
+
+  &.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  svg {
+    width: fluid(20px, 24px);
+    height: fluid(20px, 24px);
+    stroke: currentColor;
+  }
+
+  @include mq(tablet-ls) {
+    bottom: rem-calc(20px);
+    right: rem-calc(20px);
+  }
+}

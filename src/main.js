@@ -152,10 +152,37 @@ const initMobileMenu = () => {
   });
 };
 
-// 3. 페이지 로드 시 실행
+/**
+ * 3. 플로팅 버튼 동작 로직
+ */
+const initFloatingButton = () => {
+  const btn = document.getElementById('btn-scroll-top');
+  if (!btn) return;
+
+  // Show/hide based on scroll position
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      btn.classList.add('is-visible');
+    } else {
+      btn.classList.remove('is-visible');
+    }
+  });
+
+  // Scroll to hero section on click
+  btn.addEventListener('click', () => {
+    if (lenis) {
+      lenis.scrollTo('#hero', { duration: 1.2 });
+    } else {
+      document.getElementById('hero')?.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+};
+
+// 4. 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', () => {
   initLenis();
   initMobileMenu();
+  initFloatingButton();
 
   // 4. Hero 애니메이션 최적화 모듈 호출
   if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
