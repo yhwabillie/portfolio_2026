@@ -7,14 +7,14 @@
   width: fluid(44px, 56px);
   height: fluid(44px, 56px);
   border-radius: 50%;
-  background-color: #111;
-  color: #fff;
+  background-color: var(--btn-bg);
+  color: var(--btn-text);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 rem-calc(8px) rem-calc(20px) rgba(0, 0, 0, 0.15);
+  box-shadow: 0 rem-calc(8px) rem-calc(20px) var(--bg-overlay);
   z-index: 100;
   opacity: 0;
   visibility: hidden;
@@ -26,7 +26,7 @@
     background-color 0.3s ease;
 
   &:hover {
-    background-color: #555;
+    background-color: var(--btn-hover);
     transform: translateY(0) scale(1.05);
   }
 

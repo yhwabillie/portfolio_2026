@@ -142,6 +142,7 @@
       z-index: 1;
       text-align: center;
       margin-bottom: rem-calc(20px);
+      color: var(--text-primary);
     }
 
     &__section-sub {
@@ -180,7 +181,7 @@
         .about__title {
           padding: 0;
           align-items: flex-start;
-          color: #111;
+          color: var(--text-primary);
 
           &-main {
             letter-spacing: initial;
@@ -196,7 +197,7 @@
       transform: none !important;
       width: 100%;
       height: rem-calc(300px);
-      border: rem-calc(1px) solid #111;
+      border: rem-calc(1px) solid var(--border-color);
       border-radius: rem-calc(24px);
       overflow: hidden;
 
@@ -208,7 +209,7 @@
     &__img-cover {
       position: relative;
       object-fit: cover;
-      background-color: #111;
+      background-color: var(--black);
     }
   }
 

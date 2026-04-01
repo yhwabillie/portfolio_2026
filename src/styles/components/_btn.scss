@@ -5,19 +5,19 @@
   min-width: rem-calc(48px);
   height: rem-calc(48px);
   border-radius: rem-calc(24px);
-  background-color: #eeeeee;
+  background-color: var(--bg-secondary);
   align-items: center;
   padding: 0 rem-calc(24px);
   cursor: pointer;
 
   &__label {
     font-size: rem-calc(18px);
-    color: #111;
+    color: var(--text-primary);
     font-weight: 500;
   }
 
   &__icon {
-    color: #111;
+    color: var(--text-primary);
   }
 
   @include mq(tablet-ls) {
@@ -33,7 +33,7 @@
     }
 
     &__icon {
-      color: #111;
+      color: var(--text-primary);
     }
   }
 }
@@ -43,7 +43,7 @@
   min-width: rem-calc(48px);
   height: rem-calc(48px);
   border-radius: rem-calc(24px);
-  background-color: #eeeeee;
+  background-color: var(--bg-secondary);
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -55,7 +55,7 @@
   }
 
   &__icon {
-    color: #111;
+    color: var(--text-primary);
   }
 }
 
@@ -69,7 +69,7 @@
   height: rem-calc(52px);
   padding: 0 rem-calc(28px);
   border-radius: rem-calc(26px);
-  background-color: #111;
+  background-color: var(--btn-bg);
   cursor: pointer !important; // Force pointer even after GSAP
   pointer-events: auto; // Ensure events are captured
   text-decoration: none;
@@ -85,25 +85,25 @@
   }
 
   &.outline {
-    background-color: #fff;
-    border: rem-calc(1px) solid #111;
+    background-color: var(--btn-outline-bg);
+    border: rem-calc(1px) solid var(--border-color);
 
     &:hover {
-      background-color: #f5f5f5;
+      background-color: var(--btn-outline-hover);
       /* removed box-shadow and translateY to prevent clipping */
     }
 
     .link-btn__label {
-      color: #000;
+      color: var(--btn-outline-text);
     }
 
     .link-btn__icon {
-      color: #000;
+      color: var(--btn-outline-text);
     }
   }
 
   &:hover {
-    background-color: #333;
+    background-color: var(--btn-hover);
     /* removed box-shadow and translateY to prevent clipping */
 
     .link-btn__icon {
@@ -112,12 +112,12 @@
   }
 
   &:active {
-    background-color: #555;
+    background-color: var(--btn-hover);
   }
 
   &__label {
     font-size: rem-calc(16px);
-    color: white;
+    color: var(--btn-text);
     pointer-events: none;
     line-height: 1;
     font-weight: 500;
@@ -129,11 +129,20 @@
   }
 
   &__icon {
-    color: white;
+    color: var(--btn-text);
     pointer-events: none;
     width: rem-calc(20px);
     height: rem-calc(20px);
-    transition: transform 0.3s ease, color 0.3s ease;
+    transition: transform 0.3s ease, color 0.3s ease, filter 0.3s ease;
+
+    // 인라인 SVG(Lucide 등)는 기본적으로 반전하지 않음 (currentColor로 자동 반영)
+    filter: none;
+
+    // GitHub 아이콘처럼 외부 파일(img)인 경우에만 다크모드에서 반전 처리
+    &[src],
+    img {
+      filter: invert(var(--invert-amount));
+    }
 
     @include mq(tablet-ls) {
       width: rem-calc(18px);

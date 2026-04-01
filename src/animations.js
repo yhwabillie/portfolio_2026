@@ -1,6 +1,17 @@
 // src/animations.js
 import { ANIMATION_CONFIG } from './config.js';
 
+// 글로벌 GSAP 최적화 설정
+export const setupGsapDefaults = (gsap) => {
+  gsap.config({
+    force3D: true, // 하드웨어 가속 강제
+  });
+  
+  gsap.defaults({
+    ease: "none", // 스크롤 직결 애니메이션은 none이 부드러움
+  });
+};
+
 export function initHeaderReveal({ gsap, ScrollTrigger }) {
   if (!gsap || !ScrollTrigger) return () => {};
 
@@ -44,6 +55,7 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
       duration: 1.0,
       stagger: 0.3,
       ease: 'expo.out',
+      force3D: true,
     });
 
     bgRotation = gsap.to('.hero-accent', {
@@ -51,6 +63,7 @@ export function initHeroAnimation({ gsap, ScrollTrigger }) {
       duration: 6,
       repeat: -1,
       ease: 'none',
+      force3D: true,
     });
 
     mainTl = gsap.timeline({
@@ -119,7 +132,7 @@ export function initAboutAnimation({ gsap, ScrollTrigger }) {
           start: 'top top',
           end: '+=400%', // CSS height에 의존하지 않고 애니메이션 구간을 강제로 확보하여 속도를 늦춤
           pin: '.about__sticky-wrap',
-          scrub: 2,
+          scrub: 1, // 2에서 1로 조정
           invalidateOnRefresh: true,
           anticipatePin: 1,
         },
@@ -531,10 +544,10 @@ export const initMarqueeAnimation = ({ gsap, ScrollTrigger }) => {
  */
 const coin1 = '/src/assets/images/matter-1.svg';
 const coin2 = '/src/assets/images/matter-2.svg';
-const coin3 = '/src/assets/images/matter-4.svg';
-const coin4 = '/src/assets/images/matter-1.svg';
-const coin5 = '/src/assets/images/matter-2.svg';
-const coin6 = '/src/assets/images/matter-4.svg';
+const coin3 = '/src/assets/images/matter-3.svg';
+const coin4 = '/src/assets/images/matter-4.svg';
+const coin5 = '/src/assets/images/matter-5.svg';
+const coin6 = '/src/assets/images/matter-6.svg';
 
 export const initFooterAnimation = ({ gsap, ScrollTrigger }) => {
   if (typeof window.Matter === 'undefined') {

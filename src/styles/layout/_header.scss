@@ -7,7 +7,7 @@
   width: 100%;
   z-index: 1000;
   padding: rem-calc(30px) 0 rem-calc(30px);
-  border-bottom: rem-calc(1px) solid var(--color-border, #111);
+  border-bottom: rem-calc(1px) solid var(--border-color);
   transition: all 0.3s ease-in-out;
   background-color: transparent;
 
@@ -59,6 +59,11 @@
 
     .is-scrolled & {
       margin-top: rem-calc(16px);
+    }
+
+    img {
+      filter: invert(var(--invert-amount));
+      transition: filter 0.3s ease;
     }
 
     @include mq(tablet-ls) {

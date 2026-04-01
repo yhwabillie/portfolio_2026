@@ -1,5 +1,5 @@
 // src/main.js
-import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initMarqueeAnimation, initFooterAnimation } from './animations.js';
+import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainAnimation, initWorksAnimation, initMarqueeAnimation, initFooterAnimation, setupGsapDefaults } from './animations.js';
 
 /**
  * 1. Lenis 초기화 (Smooth Scroll)
@@ -8,11 +8,14 @@ import { initHeaderReveal, initHeroAnimation, initAboutAnimation, initAboutMainA
 let lenis;
 const initLenis = () => {
   if (typeof Lenis !== 'undefined') {
+    // GSAP 기본 설정 적용
+    setupGsapDefaults(gsap);
+
     lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
+      orientation: "vertical",
+      gestureOrientation: "vertical",
       smoothWheel: true,
       wheelMultiplier: 1,
       smoothTouch: false,
@@ -21,11 +24,16 @@ const initLenis = () => {
 
     window.lenis = lenis;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
-    requestAnimationFrame(raf);
+    // ScrollTrigger와 Lenis 동기화
+    lenis.on("scroll", ScrollTrigger.update);
+
+    // GSAP Ticker를 사용하여 Lenis.raf 호출 (프레임 동기화 최적화)
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000); // gsap.ticker는 초 단위, lenis는 밀리초 단위 필요
+    });
+
+    // Ticker의 지연 시간 설정 (부드러운 움직임 보색)
+    gsap.ticker.lagSmoothing(0);
   }
 };
 
@@ -178,6 +186,46 @@ const initHeaderNav = () => {
 };
 
 /**
+ * 4. 테마 전환 (Light/Dark Mode)
+ */
+const initTheme = () => {
+  const themeBtn = document.querySelector('[data-theme-change]');
+  if (!themeBtn) return;
+
+  // 로컬 스토리지에서 테마 확인
+  let currentTheme = localStorage.getItem('theme') || 'light';
+  if (currentTheme === 'dark') {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+
+  // 아이콘 토글 함수 (문/선)
+  const toggleIcon = (theme) => {
+    if (theme === 'dark') {
+      themeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn__icon lucide lucide-sun-icon lucide-sun"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>`;
+    } else {
+      themeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="btn__icon lucide lucide-moon-icon lucide-moon"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401" /></svg>`;
+    }
+  };
+
+  // 초기 아이콘 세팅
+  toggleIcon(currentTheme);
+
+  themeBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    currentTheme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    
+    if (currentTheme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+    }
+    
+    localStorage.setItem('theme', currentTheme);
+    toggleIcon(currentTheme);
+  });
+};
+
+/**
  * 3. 플로팅 버튼 동작 로직
  */
 const initFloatingButton = () => {
@@ -205,6 +253,7 @@ const initFloatingButton = () => {
 
 // 5. 페이지 로드 시 실행
 document.addEventListener('DOMContentLoaded', () => {
+  initTheme();
   initLenis();
   initMobileMenu();
   initHeaderNav();

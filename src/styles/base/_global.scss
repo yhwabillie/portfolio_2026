@@ -18,6 +18,15 @@ body {
     "Malgun Gothic",
     sans-serif;
   display: flex;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// 텍스트 색상을 리셋에서부터 변수로 관리
+body * {
+  border-color: var(--border-color);
+  // transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .wrap {
@@ -26,6 +35,17 @@ body {
   flex-direction: column;
   width: 100%;
   overflow-x: clip;
+  
+  // 가속 최적화
+  backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// 공통적으로 애니메이션이 발생하는 요소들에 하드웨어 가속 유도
+.hero__title-base, .hero__title-shade, .about__content, .about-main__title, .works__item, .footer-title {
+  will-change: transform, opacity;
+  transform: translateZ(0); 
 }
 
 .container {

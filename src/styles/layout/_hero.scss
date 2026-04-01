@@ -54,7 +54,7 @@
   &__title-base {
     grid-column-gap: #{vw-calc(60px)};
     grid-row-gap: #{vw-calc(60px)};
-    color: #eeeeee;
+    color: var(--text-muted);
     justify-content: flex-start;
     align-items: center;
     display: flex;
@@ -73,7 +73,7 @@
   &__title-shade {
     grid-column-gap: #{vw-calc(60px)};
     grid-row-gap: #{vw-calc(60px)};
-    color: #111;
+    color: var(--text-primary);
     justify-content: flex-start;
     align-items: center;
     display: flex;
@@ -90,7 +90,7 @@
   }
 
   &__big-text {
-    color: #111;
+    color: var(--text-primary);
   }
 
   &__accent-wrap {
@@ -110,7 +110,7 @@
     align-items: center;
     padding: #{vw-calc(20px)};
     border-radius: #{vw-calc(88px)};
-    background-color: #eeeeee;
+    background-color: var(--fill-muted);
   }
 
   &-accent {
@@ -127,7 +127,7 @@
       position: absolute;
       width: 100%;
       height: #{vw-calc(14px)};
-      background-color: #111;
+      background-color: var(--text-primary);
 
       $rotations: (
         2: 90deg,
@@ -168,7 +168,7 @@
   }
 
   &__desc-accent {
-    background-color: #eeeeee;
+    background-color: var(--fill-muted);
     display: inline-flex;
     align-items: center;
     padding: 0 fluid(8px, 16px);

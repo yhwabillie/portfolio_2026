@@ -3,20 +3,20 @@
 
 .marquee_cta {
   &_component {
-    background-color: #111;
+    background-color: var(--text-primary);
   }
 
   &_list {
     display: flex;
     white-space: nowrap;
-    background-color: #111; /* Fix for white lines between items caused by sub-pixel rendering */
+    background-color: var(--text-primary); /* Fix for white lines between items caused by sub-pixel rendering */
   }
 
   &_item {
     display: flex;
     align-items: center;
     gap: 2vw;
-    background-color: #111;
+    background-color: var(--text-primary);
     padding-right: 2vw;
   }
 
@@ -25,7 +25,7 @@
     font-weight: 700;
     margin: 0;
     letter-spacing: -0.2vw;
-    color: white;
+    color: var(--bg-primary);
   }
 
   &_icon {
